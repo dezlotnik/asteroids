@@ -5,8 +5,7 @@
 Game::Game(std::size_t screen_width, std::size_t screen_height) : 
       screen_width(screen_width),
       screen_height(screen_height) {
-    spaceship.position_x = 320;
-    spaceship.position_y = 320;
+    spaceship.setPose(320,320,0.0);
     spaceship.screen_height = screen_height;
     spaceship.screen_width = screen_width;
 }

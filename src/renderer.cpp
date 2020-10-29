@@ -72,13 +72,13 @@ void Renderer::Render(SpaceShip const &spaceship) {
   SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
   SDL_FreeSurface(surface);
   SDL_Rect destination;
-  destination.x = static_cast<int>( spaceship.position_x - 49/2);
-  destination.y = static_cast<int>( spaceship.position_y - 37/2);
+  destination.x = static_cast<int>( spaceship.getPose().x - 49/2);
+  destination.y = static_cast<int>( spaceship.getPose().y - 37/2);
   destination.w = 49;
   destination.h = 37;
 
   SDL_RendererFlip flip = SDL_FLIP_NONE;
-  SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, spaceship.angle, NULL, flip );
+  SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, spaceship.getPose().angle, NULL, flip );
  
 
   // Render spaceship
