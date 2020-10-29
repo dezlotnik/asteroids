@@ -5,7 +5,7 @@
 
 class SpaceShip : public GameObject {
 public:
-    SpaceShip() {}
+    SpaceShip();
     void Update();
     enum class ThrusterState { kNone, kAccelerate, kDecelerate };
     enum class RotateState { kNone, kLeft, kRight };

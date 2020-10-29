@@ -13,6 +13,7 @@ class Renderer {
   ~Renderer();
 
   void Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids);
+  void RenderGameObject(const GameObject *game_object);
   void UpdateWindowTitle(int score, int fps);
 
  private:

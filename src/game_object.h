@@ -2,6 +2,7 @@
 #define GAMEOBJECT_H
 
 #include <vector>
+#include <string>
 
 class GameObject {
 public:
@@ -27,6 +28,10 @@ public:
 
     float screen_height = 640;
     float screen_width = 640;
+
+    std::string file_name;
+    int image_height;
+    int image_width;
 
 protected:
     float maximum_speed_ = 10.0;

@@ -41,6 +41,20 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
+void Renderer::RenderGameObject(const GameObject *game_object) {
+    SDL_Surface* surface = IMG_Load((game_object->file_name).c_str()); 
+    // printf("IMG_Load: %s\n", IMG_GetError());
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
+    SDL_FreeSurface(surface);
+    SDL_Rect destination;
+    destination.x = static_cast<int>(game_object->getPose().x - game_object->image_width/2);
+    destination.y = static_cast<int>(game_object->getPose().y - game_object->image_height/2);
+    destination.w = game_object->image_width;
+    destination.h = game_object->image_height;
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().angle, NULL, flip );
+}
+
 void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
@@ -51,40 +65,12 @@ void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<As
   SDL_RenderClear(sdl_renderer);
 
   // Render spaceship
-  SDL_Surface* surface = IMG_Load("playerShip3_blue.png"); 
-  // printf("IMG_Load: %s\n", IMG_GetError());
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
-  SDL_FreeSurface(surface);
-  SDL_Rect destination;
-  destination.x = static_cast<int>(spaceship.getPose().x - 49/2);
-  destination.y = static_cast<int>(spaceship.getPose().y - 37/2);
-  destination.w = 49;
-  destination.h = 37;
-
-  SDL_RendererFlip flip = SDL_FLIP_NONE;
-  SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, spaceship.getPose().angle, NULL, flip );
+  RenderGameObject(&spaceship);
  
   // Render asteroids
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
-    surface = IMG_Load("meteorBrown_big1.png");
-    texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
-    SDL_FreeSurface(surface);
-    destination.x = static_cast<int>(asteroid->getPose().x - 101/2);
-    destination.y = static_cast<int>(asteroid->getPose().y - 84/2);
-    destination.w = 101;
-    destination.h = 84;
-    SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, asteroid->getPose().angle, NULL, flip );
+    RenderGameObject(asteroid.get());
   }
-
-  // Render spaceship
-//   block.x = static_cast<int>(spaceship.position_x) * block.w;
-//   block.y = static_cast<int>(spaceship.position_y) * block.h;
-//   if (spaceship.alive) {
-//     SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-//   } else {
-//     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-//   }
-//   SDL_RenderFillRect(sdl_renderer, &block);
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

@@ -1,5 +1,11 @@
 #include "spaceship.h"
 
+SpaceShip::SpaceShip() {
+    file_name = "playerShip3_blue.png";
+    image_width = 49;
+    image_height = 37;
+}
+
 void SpaceShip::Update() {
   float speed = velocity_.velocity;
   float angular_velocity;
