@@ -19,11 +19,11 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
           break;
 
         case SDLK_LEFT:
-          spaceship.angle -= 10.0;
+          spaceship.angle -= 20.0;
           break;
 
         case SDLK_RIGHT:
-          spaceship.angle += 10.0;
+          spaceship.angle += 20.0;
           break;
 
         default :

@@ -55,13 +55,13 @@ void Game::Update() {
   float new_speed = spaceship.speed;
   switch (spaceship.state) {
     case SpaceShip::State::kAccelerate:
-      new_speed += 0.1;
-      if (new_speed > 3.0) {
-        new_speed = 5.0;
+      new_speed += 1;
+      if (new_speed > 10.0) {
+        new_speed = 10.0;
       }
       break;
     case SpaceShip::State::kDecelerate:
-      new_speed -= 0.1;
+      new_speed -= 0.2;
       if (new_speed < 0.0) {
         new_speed = 0.0;
       }
