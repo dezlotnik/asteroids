@@ -13,12 +13,13 @@ public:
     };
     struct Velocity {
         float velocity = 0.0;
+        float heading = 0.0;
         float angular_velocity = 0.0;
     };
     
     void setPose(float x, float y, float angle);
     Pose getPose() const {return pose_;}
-    void setVelocity(float velocity, float angular_velocity);
+    void setVelocity(float velocity, float heading, float angular_velocity);
     Velocity getVelocity() const {return velocity_;}
     void setDirection(float angle);
     std::vector<float> getDirection() const {return direction_;}

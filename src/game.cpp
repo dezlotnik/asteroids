@@ -6,8 +6,8 @@
 Game::Game(std::size_t screen_width, std::size_t screen_height) : 
       screen_width(screen_width),
       screen_height(screen_height) {
-    spaceship.setPose(320,320,0.0);
-    int nAsteroids = 2;
+    spaceship.setPose(screen_width/2,screen_height/2,0.0);
+    int nAsteroids = 3;
     for (size_t i = 0; i < nAsteroids; i++)
     {
         asteroids.push_back(std::make_shared<Asteroid>());

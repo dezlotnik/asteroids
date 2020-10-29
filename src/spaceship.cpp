@@ -3,6 +3,7 @@
 void SpaceShip::Update() {
   float speed = velocity_.velocity;
   float angular_velocity;
+  float heading;
 
   // set speed
   switch (thruster_state) {
@@ -31,6 +32,8 @@ void SpaceShip::Update() {
       break;
   }
 
-  setVelocity(speed, angular_velocity);
+  heading = pose_.angle;
+
+  setVelocity(speed, heading, angular_velocity);
   updatePose();
 }

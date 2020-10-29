@@ -14,7 +14,7 @@ private:
   std::uniform_int_distribution<float> random_x;
   std::uniform_int_distribution<float> random_y;
   std::uniform_int_distribution<float> random_speed;
-  std::uniform_int_distribution<float> random_angle;
+  std::uniform_int_distribution<float> random_heading;
 };
 
 #endif
