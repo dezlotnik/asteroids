@@ -1,13 +1,14 @@
 #include "game.h"
 #include <iostream>
 #include "SDL.h"
-#include <math.h>
 
 Game::Game(std::size_t screen_width, std::size_t screen_height) : 
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.position_x = 320;
     spaceship.position_y = 320;
+    spaceship.screen_height = screen_height;
+    spaceship.screen_width = screen_width;
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -51,37 +52,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
-  float new_speed = spaceship.speed;
-
-  switch (spaceship.thruster_state) {
-    case SpaceShip::ThrusterState::kAccelerate:
-      new_speed += 1;
-      if (new_speed > 10.0) {
-        new_speed = 10.0;
-      }
-      break;
-    case SpaceShip::ThrusterState::kDecelerate:
-      new_speed -= 0.2;
-      if (new_speed < 0.0) {
-        new_speed = 0.0;
-      }
-      break;
-  }
-
-  switch (spaceship.rotate_state) {
-    case SpaceShip::RotateState::kLeft:
-      spaceship.angle -= 10.0;
-      break;
-    case SpaceShip::RotateState::kRight:
-      spaceship.angle += 10.0;
-      break;
-  }
-
-  spaceship.speed = new_speed;
-  spaceship.position_x -= cos((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
-  spaceship.position_y -= sin((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
-  spaceship.position_x = fmod(spaceship.position_x + screen_width, screen_width);
-  spaceship.position_y = fmod(spaceship.position_y + screen_height, screen_height);
+  spaceship.Update();
 }
 
 int Game::GetScore() const { return 0; }

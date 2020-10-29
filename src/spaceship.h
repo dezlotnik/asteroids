@@ -5,6 +5,7 @@
 class SpaceShip {
 public:
     SpaceShip() {}
+    void Update();
     enum class ThrusterState { kNone, kAccelerate, kDecelerate };
     enum class RotateState { kNone, kLeft, kRight };
     bool alive{true};
@@ -15,8 +16,10 @@ public:
     float speed = 0.0;
     ThrusterState thruster_state = ThrusterState::kNone;
     RotateState rotate_state = RotateState::kNone;
+    float screen_height;
+    float screen_width;
 
 private:
-
 };
+
 #endif
