@@ -11,26 +11,46 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
     } else if (e.type == SDL_KEYDOWN) {
       switch (e.key.keysym.sym) {
         case SDLK_UP:
-          spaceship.state = SpaceShip::State::kAccelerate;
+          spaceship.thruster_state = SpaceShip::ThrusterState::kAccelerate;
           break;
 
         case SDLK_DOWN:
-          spaceship.state = SpaceShip::State::kDecelerate;
+          //spaceship.state = SpaceShip::State::kDecelerate;
           break;
 
         case SDLK_LEFT:
-          spaceship.angle -= 20.0;
+          spaceship.rotate_state = SpaceShip::RotateState::kLeft;
           break;
 
         case SDLK_RIGHT:
-          spaceship.angle += 20.0;
+          spaceship.rotate_state = SpaceShip::RotateState::kRight;
           break;
 
         default :
-          spaceship.state = SpaceShip::State::kDecelerate;
+          break;
+          //spaceship.state = SpaceShip::State::kDecelerate;
       }
-    } else {
-      spaceship.state = SpaceShip::State::kDecelerate;
+    } else if (e.type == SDL_KEYUP) {
+      switch (e.key.keysym.sym) {
+        case SDLK_UP:
+          spaceship.thruster_state = SpaceShip::ThrusterState::kDecelerate;
+          break;
+
+        case SDLK_DOWN:
+          //spaceship.state = SpaceShip::State::kDecelerate;
+          break;
+
+        case SDLK_LEFT:
+          spaceship.rotate_state = SpaceShip::RotateState::kNone;
+          break;
+
+        case SDLK_RIGHT:
+          spaceship.rotate_state = SpaceShip::RotateState::kNone;
+          break;
+
+        default :
+          break;
     }
   }
+}
 }

@@ -52,20 +52,31 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
 void Game::Update() {
   float new_speed = spaceship.speed;
-  switch (spaceship.state) {
-    case SpaceShip::State::kAccelerate:
+
+  switch (spaceship.thruster_state) {
+    case SpaceShip::ThrusterState::kAccelerate:
       new_speed += 1;
       if (new_speed > 10.0) {
         new_speed = 10.0;
       }
       break;
-    case SpaceShip::State::kDecelerate:
+    case SpaceShip::ThrusterState::kDecelerate:
       new_speed -= 0.2;
       if (new_speed < 0.0) {
         new_speed = 0.0;
       }
       break;
   }
+
+  switch (spaceship.rotate_state) {
+    case SpaceShip::RotateState::kLeft:
+      spaceship.angle -= 10.0;
+      break;
+    case SpaceShip::RotateState::kRight:
+      spaceship.angle += 10.0;
+      break;
+  }
+
   spaceship.speed = new_speed;
   spaceship.position_x -= cos((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
   spaceship.position_y -= sin((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
