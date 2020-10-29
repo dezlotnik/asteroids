@@ -5,26 +5,32 @@ void SpaceShip::Update() {
   float new_speed = speed;
 
   switch (thruster_state) {
-    case SpaceShip::ThrusterState::kAccelerate:
+    case ThrusterState::kAccelerate:
       new_speed += 1;
       if (new_speed > 10.0) {
         new_speed = 10.0;
       }
       break;
-    case SpaceShip::ThrusterState::kDecelerate:
+    case ThrusterState::kDecelerate:
       new_speed -= 0.2;
       if (new_speed < 0.0) {
         new_speed = 0.0;
       }
       break;
+    case ThrusterState::kNone:
+    default :
+      break;
   }
 
   switch (rotate_state) {
-    case SpaceShip::RotateState::kLeft:
+    case RotateState::kLeft:
       angle -= 10.0;
       break;
-    case SpaceShip::RotateState::kRight:
+    case RotateState::kRight:
       angle += 10.0;
+      break;
+    case RotateState::kNone:
+    default :
       break;
   }
 
