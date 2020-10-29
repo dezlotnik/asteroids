@@ -53,6 +53,9 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
     destination.h = game_object->image_height;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().angle, NULL, flip );
+
+    // SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    // SDL_RenderDrawRect(sdl_renderer,&destination);
 }
 
 void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids) {
@@ -73,20 +76,25 @@ void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<As
     SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
     SDL_FreeSurface(surface);
     SDL_Rect destination;
-    float x = 16/2;
-    float y = 3.0/2.0*spaceship.image_height;
+    float x = -16/2;
+    float y = 1.0/2.0*spaceship.image_height;
     float angle = spaceship.getPose().angle * 3.14/180.0;
     float xp = cos(angle)*x - sin(angle)*y;
     float yp = sin(angle)*x + cos(angle)*y;
     destination.x = static_cast<int>(spaceship.getPose().x + xp);
     destination.y = static_cast<int>(spaceship.getPose().y + yp);
+    // destination.x = static_cast<int>(spaceship.getPose().x);
+    // destination.y = static_cast<int>(spaceship.getPose().y);
     destination.w = 16;
     destination.h = 40;
     SDL_Point p;
     p.x = 0;
     p.y = 0;
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, (spaceship.getPose().angle + 180.0), &p, flip);
+    SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, (spaceship.getPose().angle), &p, flip);
+
+    // SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    // SDL_RenderDrawRect(sdl_renderer,&destination);
   }
  
   // Render asteroids
