@@ -1,12 +1,13 @@
 #include "game.h"
 #include <iostream>
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height) : 
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
       random_h(0, static_cast<int>(grid_height)) {
-
+    spaceship.position_x = 320;
+    spaceship.position_y = 320;
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -24,7 +25,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running);
     Update();
-    renderer.Render();
+    renderer.Render(spaceship);
 
     frame_end = SDL_GetTicks();
 

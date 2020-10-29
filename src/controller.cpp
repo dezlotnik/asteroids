@@ -1,6 +1,6 @@
 #include "controller.h"
 #include <iostream>
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 void Controller::HandleInput(bool &running) const {
   SDL_Event e;
