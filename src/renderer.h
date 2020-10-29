@@ -2,7 +2,7 @@
 #define RENDERER_H
 
 #include <vector>
-#include <SDL2/SDL.h>
+#include "SDL.h"
 #include "spaceship.h"
 
 class Renderer {

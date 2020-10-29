@@ -2,7 +2,7 @@
 #define GAME_H
 
 #include <random>
-#include <SDL2/SDL.h>
+#include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
 #include "spaceship.h"

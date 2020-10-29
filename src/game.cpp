@@ -1,6 +1,7 @@
 #include "game.h"
 #include <iostream>
-#include <SDL2/SDL.h>
+#include "SDL.h"
+#include <math.h>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height) : 
       engine(dev()),
@@ -23,7 +24,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running);
+    controller.HandleInput(running, spaceship);
     Update();
     renderer.Render(spaceship);
 
@@ -51,7 +52,24 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
-
+  float new_speed = spaceship.speed;
+  switch (spaceship.state) {
+    case SpaceShip::State::kAccelerate:
+      new_speed += 0.1;
+      if (new_speed > 3.0) {
+        new_speed = 5.0;
+      }
+      break;
+    case SpaceShip::State::kDecelerate:
+      new_speed -= 0.1;
+      if (new_speed < 0.0) {
+        new_speed = 0.0;
+      }
+      break;
+  }
+  spaceship.speed = new_speed;
+  spaceship.position_x -= cos((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
+  spaceship.position_y -= sin((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
 }
 
 int Game::GetScore() const { return 0; }

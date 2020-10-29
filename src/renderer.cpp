@@ -2,7 +2,7 @@
 #include "spaceship.h"
 #include <iostream>
 #include <string>
-#include <SDL2/SDL_image.h>
+#include "SDL_image.h"
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -67,18 +67,18 @@ void Renderer::Render(SpaceShip const &spaceship) {
 //   SDL_RenderDrawLines(sdl_renderer,points,3);
 //   delete[] points;
 
-  SDL_Surface* surface = IMG_Load("player.png"); 
-  printf("IMG_Load: %s\n", IMG_GetError());
+  SDL_Surface* surface = IMG_Load("playerShip3_blue.png"); 
+  // printf("IMG_Load: %s\n", IMG_GetError());
   SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
   SDL_FreeSurface(surface);
   SDL_Rect destination;
-  destination.x = static_cast<int>( spaceship.position_x );
-  destination.y = static_cast<int>( spaceship.position_y );
-  destination.w = 99;
-  destination.w = 75;
+  destination.x = static_cast<int>( spaceship.position_x - 49/2);
+  destination.y = static_cast<int>( spaceship.position_y - 37/2);
+  destination.w = 49;
+  destination.h = 37;
 
-  SDL_RenderCopy(sdl_renderer, texture, NULL, &destination);
-
+  SDL_RendererFlip flip = SDL_FLIP_NONE;
+  SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, spaceship.angle, NULL, flip );
  
 
   // Render spaceship
