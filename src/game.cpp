@@ -1,5 +1,6 @@
 #include "game.h"
 #include <iostream>
+#include <memory>
 #include "SDL.h"
 
 Game::Game(std::size_t screen_width, std::size_t screen_height) : 
@@ -8,6 +9,8 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
     spaceship.setPose(320,320,0.0);
     spaceship.screen_height = screen_height;
     spaceship.screen_width = screen_width;
+    asteroid.screen_height = screen_height;
+    asteroid.screen_width = screen_width;
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -25,7 +28,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, spaceship);
     Update();
-    renderer.Render(spaceship);
+    renderer.Render(spaceship, asteroid);
 
     frame_end = SDL_GetTicks();
 
@@ -52,6 +55,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
 void Game::Update() {
   spaceship.Update();
+  asteroid.Update();
 }
 
 int Game::GetScore() const { return 0; }

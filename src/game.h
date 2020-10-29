@@ -2,10 +2,13 @@
 #define GAME_H
 
 #include <random>
+#include <vector>
+#include <memory>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
 #include "spaceship.h"
+#include "asteroid.h"
 
 class Game {
  public:
@@ -16,6 +19,7 @@ class Game {
 
  private:
   SpaceShip spaceship;
+  Asteroid asteroid;
 
   int score{0};
   std::size_t screen_width;

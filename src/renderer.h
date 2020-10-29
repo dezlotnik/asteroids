@@ -4,6 +4,7 @@
 #include <vector>
 #include "SDL.h"
 #include "spaceship.h"
+#include "asteroid.h"
 
 class Renderer {
  public:
@@ -11,7 +12,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(SpaceShip const &spaceship);
+  void Render(SpaceShip const &spaceship, Asteroid const &asteroid);
   void UpdateWindowTitle(int score, int fps);
 
  private:

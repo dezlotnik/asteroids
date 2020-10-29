@@ -1,4 +1,3 @@
-#include <math.h>
 #include "spaceship.h"
 
 void SpaceShip::Update() {
@@ -9,15 +8,9 @@ void SpaceShip::Update() {
   switch (thruster_state) {
     case ThrusterState::kAccelerate:
       speed += 1;
-      if (speed > 10.0) {
-        speed = 10.0;
-      }
       break;
     case ThrusterState::kDecelerate:
       speed -= 0.2;
-      if (speed < 0.0) {
-        speed = 0.0;
-      }
       break;
     case ThrusterState::kNone:
     default :

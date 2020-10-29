@@ -8,7 +8,13 @@ void GameObject::setPose(float x, float y, float angle) {
 }
 
 void GameObject::setVelocity(float velocity, float angular_velocity) {
-    velocity_.velocity = velocity;
+    if (velocity > maximum_speed_) {
+        velocity_.velocity = maximum_speed_;
+    } else if (velocity < minimum_speed_) {
+        velocity_.velocity = minimum_speed_;
+    } else {
+        velocity_.velocity = velocity;
+    }
     velocity_.angular_velocity = angular_velocity;
 }
 
