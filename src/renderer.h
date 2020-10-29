@@ -12,7 +12,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(SpaceShip const &spaceship, Asteroid const &asteroid);
+  void Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids);
   void UpdateWindowTitle(int score, int fps);
 
  private:

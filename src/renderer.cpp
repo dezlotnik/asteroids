@@ -41,7 +41,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(SpaceShip const &spaceship, Asteroid const &asteroid) {
+void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -65,14 +65,16 @@ void Renderer::Render(SpaceShip const &spaceship, Asteroid const &asteroid) {
   SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, spaceship.getPose().angle, NULL, flip );
  
   // Render asteroids
-  surface = IMG_Load("meteorBrown_big1.png");
-  texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
-  SDL_FreeSurface(surface);
-  destination.x = static_cast<int>(asteroid.getPose().x - 101/2);
-  destination.y = static_cast<int>(asteroid.getPose().y - 84/2);
-  destination.w = 101;
-  destination.h = 84;
-  SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, asteroid.getPose().angle, NULL, flip );
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    surface = IMG_Load("meteorBrown_big1.png");
+    texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
+    SDL_FreeSurface(surface);
+    destination.x = static_cast<int>(asteroid->getPose().x - 101/2);
+    destination.y = static_cast<int>(asteroid->getPose().y - 84/2);
+    destination.w = 101;
+    destination.h = 84;
+    SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, asteroid->getPose().angle, NULL, flip );
+  }
 
   // Render spaceship
 //   block.x = static_cast<int>(spaceship.position_x) * block.w;

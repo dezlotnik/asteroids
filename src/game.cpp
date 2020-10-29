@@ -7,10 +7,11 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.setPose(320,320,0.0);
-    spaceship.screen_height = screen_height;
-    spaceship.screen_width = screen_width;
-    asteroid.screen_height = screen_height;
-    asteroid.screen_width = screen_width;
+    int nAsteroids = 2;
+    for (size_t i = 0; i < nAsteroids; i++)
+    {
+        asteroids.push_back(std::make_shared<Asteroid>());
+    }
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -28,7 +29,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, spaceship);
     Update();
-    renderer.Render(spaceship, asteroid);
+    renderer.Render(spaceship, asteroids);
 
     frame_end = SDL_GetTicks();
 
@@ -55,7 +56,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
 void Game::Update() {
   spaceship.Update();
-  asteroid.Update();
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    asteroid->Update();
+  }
 }
 
 int Game::GetScore() const { return 0; }

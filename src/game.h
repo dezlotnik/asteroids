@@ -19,7 +19,7 @@ class Game {
 
  private:
   SpaceShip spaceship;
-  Asteroid asteroid;
+  std::vector<std::shared_ptr<Asteroid>> asteroids;
 
   int score{0};
   std::size_t screen_width;

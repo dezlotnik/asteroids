@@ -24,8 +24,8 @@ public:
     std::vector<float> getDirection() const {return direction_;}
     void updatePose();
 
-    float screen_height;
-    float screen_width;
+    float screen_height = 640;
+    float screen_width = 640;
 
 protected:
     float maximum_speed_ = 10.0;
