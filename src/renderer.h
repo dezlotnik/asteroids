@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "SDL.h"
+#include "spaceship.h"
 
 class Renderer {
  public:
@@ -10,7 +11,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render();
+  void Render(SpaceShip const &spaceship);
   void UpdateWindowTitle(int score, int fps);
 
  private:
