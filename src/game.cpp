@@ -3,10 +3,9 @@
 #include "SDL.h"
 #include <math.h>
 
-Game::Game(std::size_t grid_width, std::size_t grid_height) : 
-      engine(dev()),
-      random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) {
+Game::Game(std::size_t screen_width, std::size_t screen_height) : 
+      screen_width(screen_width),
+      screen_height(screen_height) {
     spaceship.position_x = 320;
     spaceship.position_y = 320;
 }
@@ -70,6 +69,8 @@ void Game::Update() {
   spaceship.speed = new_speed;
   spaceship.position_x -= cos((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
   spaceship.position_y -= sin((spaceship.angle + 90.0) * 3.14/180.0) * spaceship.speed;
+  spaceship.position_x = fmod(spaceship.position_x + screen_width, screen_width);
+  spaceship.position_y = fmod(spaceship.position_y + screen_height, screen_height);
 }
 
 int Game::GetScore() const { return 0; }
