@@ -9,7 +9,7 @@ Asteroid::Asteroid() :
 {
     setVelocity(random_speed(engine),random_heading(engine),3);
     setPose(random_x(engine),random_y(engine),0);
-    file_name = "meteorBrown_big1.png";
+    file_name = "../data/meteorBrown_big1.png";
     image_width = 101;
     image_height = 85;
 }

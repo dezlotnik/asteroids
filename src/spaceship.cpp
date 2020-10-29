@@ -1,7 +1,7 @@
 #include "spaceship.h"
 
 SpaceShip::SpaceShip() {
-    file_name = "playerShip3_blue.png";
+    file_name = "../data/playerShip3_blue.png";
     image_width = 49;
     image_height = 37;
 }
