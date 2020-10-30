@@ -1,8 +1,11 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include "asteroid_constants.h"
 #include <vector>
 #include <string>
+
+using namespace AsteroidConstants;
 
 class GameObject {
 public:
@@ -24,11 +27,13 @@ public:
     Velocity getVelocity() const {return velocity_;}
     void setDirection(float angle);
     void updatePose();
+    virtual float getMaximumSpeed() {return maximum_speed_;}
+    virtual float getMinimumSpeed() {return minimum_speed_;}
 
     bool alive{true};
 
-    float screen_height = 640;
-    float screen_width = 640;
+    float screen_height = kScreenHeight;
+    float screen_width = kScreenWidth;
 
     std::string file_name;
     int image_height;

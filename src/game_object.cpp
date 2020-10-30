@@ -1,5 +1,8 @@
-#include "game_object.h"
 #include <math.h>
+#include "game_object.h"
+#include "asteroid_constants.h"
+
+using namespace AsteroidConstants;
 
 void GameObject::setPose(float x, float y, float angle) {
     pose_.x = x;
@@ -8,10 +11,10 @@ void GameObject::setPose(float x, float y, float angle) {
 }
 
 void GameObject::setVelocity(float velocity, float heading, float angular_velocity) {
-    if (velocity > maximum_speed_) {
-        velocity_.velocity = maximum_speed_;
-    } else if (velocity < minimum_speed_) {
-        velocity_.velocity = minimum_speed_;
+    if (velocity > getMaximumSpeed()) {
+        velocity_.velocity = getMaximumSpeed();
+    } else if (velocity < getMinimumSpeed()) {
+        velocity_.velocity = getMinimumSpeed();
     } else {
         velocity_.velocity = velocity;
     }
@@ -24,6 +27,6 @@ void GameObject::updatePose() {
     pose_.y -= sin((velocity_.heading + 90.0) * 3.14/180.0) * velocity_.velocity;
     pose_.angle += velocity_.angular_velocity;
     
-    pose_.x = fmod(pose_.x + screen_width, screen_width);
-    pose_.y = fmod(pose_.y + screen_height, screen_height);
+    pose_.x = fmod(pose_.x + kScreenWidth, kScreenWidth);
+    pose_.y = fmod(pose_.y + kScreenHeight, kScreenHeight);
 }

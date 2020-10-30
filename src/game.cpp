@@ -8,7 +8,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.setPose(screen_width/2,screen_height/2,0.0);
-    int nAsteroids = 5;
+    int nAsteroids = 1;
     for (size_t i = 0; i < nAsteroids; i++)
     {
         asteroids.push_back(std::make_shared<Asteroid>());
@@ -61,7 +61,7 @@ void Game::Update() {
   // }
 
   if (asteroids.empty()) {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 1; i++) {
       asteroids.push_back(std::make_shared<Asteroid>());
     }
   }
@@ -78,7 +78,6 @@ void Game::Update() {
     } else if (lasers.back()->getDistance() > lasers.back()->image_height) {
       lasers.push_back(std::make_shared<Laser>(spaceship));
     }
-    //spaceship.fire = false;
   }
 
   if (!lasers.empty()) {

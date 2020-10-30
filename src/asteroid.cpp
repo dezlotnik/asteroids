@@ -1,6 +1,9 @@
+#include "asteroid_constants.h"
 #include "asteroid.h"
 #include <iostream>
 #include <tuple>
+
+using namespace AsteroidConstants;
 
 std::tuple<std::string, int, int> METIOR_1 = {"../data/meteorBrown_big1.png", 101, 85};
 std::tuple<std::string, int, int> METIOR_2 = {"../data/meteorBrown_med1.png", 43, 43};
@@ -11,23 +14,23 @@ Asteroid::Asteroid() :
     random_heading(0.0, 360.0),
     random_speed(1.0, 5.0),
     random_angular_velocity(0.5,5.0),
-    random_position(0, 2560) //640 * 4
+    random_position(0,  2*kScreenWidth + 2*kScreenHeight)
 {
     int p = random_position(engine);
     float y;
     float x;
 
-    if (p >=0 && p <= 640) {
+    if (p >=0 && p <= kScreenWidth) {
         y = 0.0;
-        x = static_cast<float>( p % 640 );
-    } else if (p > 640 && p <= 640*2) {
-        x = 640.0;
-        y = static_cast<float>( p % 640 );
-    } else if (p > 640*2 && p <= 640*3) {
-        y = 640.0;
-        x = static_cast<float>( p % 640 );
+        x = static_cast<float>( p % kScreenWidth );
+    } else if (p > kScreenWidth && p <= (kScreenWidth + kScreenHeight)) {
+        x = kScreenWidth;
+        y = static_cast<float>( (p-kScreenWidth) % kScreenHeight );
+    } else if (p > (kScreenWidth + kScreenHeight) && p <= (2*kScreenWidth + kScreenHeight)) {
+        y = kScreenHeight;
+        x = static_cast<float>( (p - kScreenWidth - kScreenHeight) % kScreenWidth );
     } else {
-        y = static_cast<float>( p % 640 );
+        y = static_cast<float>( (p - 2*kScreenWidth - kScreenHeight) % kScreenHeight );
         x = 0.0;
     }
 
@@ -38,7 +41,7 @@ Asteroid::Asteroid() :
     image_width = std::get<1>(METIOR_1);
     image_height = std::get<2>(METIOR_1);
 
-    n_child_asteroids_ = 2;
+    n_child_asteroids_ = 0;
 }
 
 Asteroid::Asteroid(const Asteroid &asteroid_parent) :
@@ -54,7 +57,7 @@ Asteroid::Asteroid(const Asteroid &asteroid_parent) :
         file_name = std::get<0>(METIOR_2);
         image_width = std::get<1>(METIOR_2);
         image_height = std::get<2>(METIOR_2);
-        n_child_asteroids_ = 2;
+        n_child_asteroids_ = 0;
     } else if (asteroid_parent.file_name ==  std::get<0>(METIOR_2)) {
         file_name = std::get<0>(METIOR_3);
         image_width = std::get<1>(METIOR_3);

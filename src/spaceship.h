@@ -8,6 +8,7 @@ class SpaceShip : public GameObject {
 public:
     SpaceShip();
     void Update();
+    float getMaximumSpeed() override {return maximum_speed_;}
     enum class ThrusterState { kNone, kAccelerate, kDecelerate };
     enum class RotateState { kNone, kLeft, kRight };
     ThrusterState thruster_state = ThrusterState::kNone;
@@ -16,6 +17,7 @@ public:
     bool firing{false};
 
 private:
+    float maximum_speed_ = 5.0;
 };
 
 #endif
