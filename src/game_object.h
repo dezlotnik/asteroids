@@ -26,6 +26,8 @@ public:
     std::vector<float> getDirection() const {return direction_;}
     void updatePose();
 
+    bool alive{true};
+
     float screen_height = 640;
     float screen_width = 640;
 

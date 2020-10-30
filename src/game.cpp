@@ -8,7 +8,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.setPose(screen_width/2,screen_height/2,0.0);
-    int nAsteroids = 4;
+    int nAsteroids = 5;
     for (size_t i = 0; i < nAsteroids; i++)
     {
         asteroids.push_back(std::make_shared<Asteroid>());
@@ -56,12 +56,12 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
-  if (!spaceship.alive) {
-    return;
-  }
+  // if (!spaceship.alive) {
+  //   return;
+  // }
 
   if (asteroids.empty()) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 5; i++) {
       asteroids.push_back(std::make_shared<Asteroid>());
     }
   }
@@ -82,7 +82,7 @@ void Game::Update() {
     while (it != lasers.end()) {
       std::shared_ptr<Laser> &laser = *it;
       laser->Update();
-      if (laser->getDistance() < laser->getRange()) {
+      if (laser->getDistance() < laser->getRange() && laser->alive) {
           ++it;
       } else {
           it = lasers.erase(it);
@@ -110,6 +110,7 @@ void Game::Update() {
       laser->getFrontPoint(x,y);
       if (CollisionDetection::detect_point_collision(*asteroid.get(),x,y)) {
         it = asteroids.erase(it);
+        laser->alive = false;
         //std::cout << "Collision Detected!!!" << "\n";
       } else {
         ++it;
