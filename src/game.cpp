@@ -56,7 +56,18 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
+  if (!spaceship.alive) {
+    return;
+  }
+
+  if (asteroids.empty()) {
+    for (int i = 0; i < 3; i++) {
+      asteroids.push_back(std::make_shared<Asteroid>());
+    }
+  }
+
   spaceship.Update();
+
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     asteroid->Update();
   }
@@ -69,13 +80,13 @@ void Game::Update() {
   if (!lasers.empty()) {
     auto it = lasers.begin();
     while (it != lasers.end()) {
-        std::shared_ptr<Laser> &laser = *it;
-        laser->Update();
-        if (laser->getDistance() < laser->getRange()) {
-            ++it;
-        } else {
-            it = lasers.erase(it);
-        }
+      std::shared_ptr<Laser> &laser = *it;
+      laser->Update();
+      if (laser->getDistance() < laser->getRange()) {
+          ++it;
+      } else {
+          it = lasers.erase(it);
+      }
     }
   }
 
@@ -99,14 +110,13 @@ void Game::Update() {
       laser->getFrontPoint(x,y);
       if (CollisionDetection::detect_point_collision(*asteroid.get(),x,y)) {
         it = asteroids.erase(it);
-        std::cout << "Collision Detected!!!" << "\n";
+        //std::cout << "Collision Detected!!!" << "\n";
       } else {
         ++it;
-        std::cout << "No collision." << "\n";
+        //std::cout << "No collision." << "\n";
       }
     }
   }
 }
-
 
 int Game::GetScore() const { return 0; }
