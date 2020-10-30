@@ -14,6 +14,6 @@ find_package(SDL2_image REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} src)
 include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
-add_executable(Asteroids src/main.cpp src/renderer.cpp src/controller.cpp src/game.cpp src/spaceship.cpp src/game_object.cpp src/asteroid.cpp)
+add_executable(Asteroids src/main.cpp src/renderer.cpp src/controller.cpp src/game.cpp src/spaceship.cpp src/game_object.cpp src/asteroid.cpp src/collision_detection.cpp)
 
 target_link_libraries(Asteroids ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})

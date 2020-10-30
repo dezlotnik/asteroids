@@ -2,12 +2,13 @@
 #include <iostream>
 #include <memory>
 #include "SDL.h"
+#include "collision_detection.h"
 
 Game::Game(std::size_t screen_width, std::size_t screen_height) : 
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.setPose(screen_width/2,screen_height/2,0.0);
-    int nAsteroids = 3;
+    int nAsteroids = 1;
     for (size_t i = 0; i < nAsteroids; i++)
     {
         asteroids.push_back(std::make_shared<Asteroid>());
@@ -58,6 +59,13 @@ void Game::Update() {
   spaceship.Update();
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     asteroid->Update();
+  }
+
+  // check collisions
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    if (CollisionDetection::detect_collision(spaceship, *asteroid.get())) {
+      spaceship.alive = false;
+    } 
   }
 }
 
