@@ -19,11 +19,6 @@ void GameObject::setVelocity(float velocity, float heading, float angular_veloci
     velocity_.angular_velocity = angular_velocity;
 }
 
-void GameObject::setDirection(float angle) {
-    direction_[0] = cos(angle * 3.14/180.0);
-    direction_[1] = sin(angle * 3.14/180.0);
-}
-
 void GameObject::updatePose() {
     pose_.x -= cos((velocity_.heading + 90.0) * 3.14/180.0) * velocity_.velocity;
     pose_.y -= sin((velocity_.heading + 90.0) * 3.14/180.0) * velocity_.velocity;

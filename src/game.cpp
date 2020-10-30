@@ -90,6 +90,32 @@ void Game::Update() {
     }
   }
 
+  std::vector<std::shared_ptr<Asteroid>> new_asteroids;
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    if (!asteroid->alive) {
+      for (int i = 0; i < asteroid->getNChildAsteroids(); i++) {
+        new_asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
+      }
+    }
+  }
+
+  // remove dead asteroids
+  if (!asteroids.empty()) {
+    auto it = asteroids.begin();
+    while (it != asteroids.end()) {
+      std::shared_ptr<Asteroid> &asteroid = *it;
+      if (asteroid->alive) {
+        ++it;
+      } else {
+        it = asteroids.erase(it);
+      }
+    }
+  }
+
+  for (std::shared_ptr<Asteroid> new_asteroid : new_asteroids) {
+    asteroids.push_back(new_asteroid);
+  }
+
   // check asteroid collisions
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     if (CollisionDetection::detect_collision(spaceship, *asteroid.get())) {
@@ -101,23 +127,39 @@ void Game::Update() {
   }
 
   // check laser collisions
-  // remove asteroid if collision detected
+  // kill asteroid and laser if collision detected
   for (std::shared_ptr<Laser> laser : lasers) {
-    auto it = asteroids.begin();
-    while (it != asteroids.end()) {
-      std::shared_ptr<Asteroid> &asteroid = *it;
-      float x, y;
-      laser->getFrontPoint(x,y);
+    float x, y;
+    laser->getFrontPoint(x,y);
+    for (std::shared_ptr<Asteroid> asteroid : asteroids) {
       if (CollisionDetection::detect_point_collision(*asteroid.get(),x,y)) {
-        it = asteroids.erase(it);
         laser->alive = false;
-        //std::cout << "Collision Detected!!!" << "\n";
-      } else {
-        ++it;
-        //std::cout << "No collision." << "\n";
+        asteroid->alive = false;
       }
     }
   }
+
+  // check laser collisions
+  // remove asteroid if collision detected
+  // for (std::shared_ptr<Laser> laser : lasers) {
+  //   auto it = asteroids.begin();
+  //   while (it != asteroids.end()) {
+  //     std::shared_ptr<Asteroid> &asteroid = *it;
+  //     float x, y;
+  //     laser->getFrontPoint(x,y);
+  //     if (CollisionDetection::detect_point_collision(*asteroid.get(),x,y)) {
+  //       for (int i = 0; i < 3; i++) {
+  //         asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
+  //       }
+  //       it = asteroids.erase(it);
+  //       laser->alive = false;
+  //       //std::cout << "Collision Detected!!!" << "\n";
+  //     } else {
+  //       ++it;
+  //       //std::cout << "No collision." << "\n";
+  //     }
+  //   }
+  // }
 }
 
 int Game::GetScore() const { return 0; }

@@ -23,7 +23,6 @@ public:
     void setVelocity(float velocity, float heading, float angular_velocity);
     Velocity getVelocity() const {return velocity_;}
     void setDirection(float angle);
-    std::vector<float> getDirection() const {return direction_;}
     void updatePose();
 
     bool alive{true};
@@ -38,7 +37,6 @@ public:
 protected:
     float maximum_speed_ = 10.0;
     float minimum_speed_ = 0.0;
-    std::vector<float> direction_ = {0.0, 1.0};
     Pose pose_;
     Velocity velocity_;
 };
