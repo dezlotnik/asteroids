@@ -22,3 +22,11 @@ void Laser::Update() {
      updatePose();
      distance_ += laser_speed_;
 }
+
+void Laser::getFrontPoint(float &x, float &y) {
+    float x_f = 0;
+    float y_f = -image_height/2.0;
+    float angle = pose_.angle * 3.14/180.0;
+    x = pose_.x + cos(angle)*x_f - sin(angle)*y_f;
+    y = pose_.y + sin(angle)*x_f + cos(angle)*y_f;
+}

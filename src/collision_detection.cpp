@@ -14,3 +14,16 @@ bool CollisionDetection::detect_collision(const GameObject &game_object_1, const
     }
     return true;
 }
+
+bool CollisionDetection::detect_point_collision(const GameObject &game_object, float x, float y) {
+    // check if point lies in image box
+    // https://www.geeksforgeeks.org/check-if-a-point-lies-on-or-inside-a-rectangle-set-2/#:~:text=A%20point%20lies%20inside%20or,right%20and%20top%2Dleft%20coordinates.
+    if (x <= game_object.getPose().x + game_object.image_width/2 &&
+        x >= game_object.getPose().x - game_object.image_width/2 &&
+        y >= game_object.getPose().y - game_object.image_height/2 &&
+        y <= game_object.getPose().y + game_object.image_height/2) {
+        return true;
+    } else {
+        return false;
+    }
+}
