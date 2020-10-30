@@ -72,9 +72,13 @@ void Game::Update() {
     asteroid->Update();
   }
 
-  if (spaceship.fire) {
-    lasers.push_back(std::make_shared<Laser>(spaceship));
-    spaceship.fire = false;
+  if (spaceship.firing) {
+    if (lasers.empty()) {
+      lasers.push_back(std::make_shared<Laser>(spaceship));
+    } else if (lasers.back()->getDistance() > lasers.back()->image_height) {
+      lasers.push_back(std::make_shared<Laser>(spaceship));
+    }
+    //spaceship.fire = false;
   }
 
   if (!lasers.empty()) {

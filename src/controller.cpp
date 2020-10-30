@@ -27,7 +27,7 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
           break;
 
         case SDLK_SPACE:
-          spaceship.fire = true;
+          spaceship.firing = true;
           break;
 
         default :
@@ -50,6 +50,10 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
 
         case SDLK_RIGHT:
           spaceship.rotate_state = SpaceShip::RotateState::kNone;
+          break;
+
+        case SDLK_SPACE:
+          spaceship.firing = false;
           break;
 
         default :

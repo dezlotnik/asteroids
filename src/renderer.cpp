@@ -68,21 +68,21 @@ void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<As
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
 
-  // Render spaceship
-  RenderGameObject(&spaceship);
-
-  // Render thruster
-  if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate) {
-    RenderGameObject(&(spaceship.thruster));
-  }
-
   // Render lasers
   if (!lasers.empty()) {
     for (std::shared_ptr<Laser> laser : lasers) {
       RenderGameObject(laser.get());
     }
   }
- 
+
+  // Render thruster
+  if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate) {
+    RenderGameObject(&(spaceship.thruster));
+  }
+
+  // Render spaceship
+  RenderGameObject(&spaceship);
+
   // Render asteroids
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     RenderGameObject(asteroid.get());
