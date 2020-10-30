@@ -55,8 +55,8 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().angle, NULL, flip );
 
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-    SDL_RenderDrawRect(sdl_renderer,&destination);
+    // SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    // SDL_RenderDrawRect(sdl_renderer,&destination);
 }
 
 void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids, std::vector<std::shared_ptr<Laser>> lasers) {

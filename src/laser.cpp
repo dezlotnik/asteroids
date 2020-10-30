@@ -17,3 +17,8 @@ Laser::Laser(const SpaceShip &spaceship) {
     // set laser velocity
     setVelocity(laser_speed_, spaceship.getPose().angle, 0);
 }
+
+void Laser::Update() {
+     updatePose();
+     distance_ += laser_speed_;
+}

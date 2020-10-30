@@ -8,9 +8,13 @@
 class Laser : public GameObject {
 public:
     Laser(const SpaceShip &spaceship);
-    void Update() {updatePose();}
+    void Update();
+    float getDistance() {return distance_;}
+    float getRange() {return range_;}
 private:
     float laser_speed_ = 10;
+    float range_ = 250;
+    float distance_ = 0.0;
 };
 
 #endif
