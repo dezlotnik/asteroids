@@ -9,6 +9,7 @@
 #include "renderer.h"
 #include "spaceship.h"
 #include "asteroid.h"
+#include "laser.h"
 
 class Game {
  public:
@@ -20,6 +21,7 @@ class Game {
  private:
   SpaceShip spaceship;
   std::vector<std::shared_ptr<Asteroid>> asteroids;
+  std::vector<std::shared_ptr<Laser>> lasers;
 
   int score{0};
   std::size_t screen_width;

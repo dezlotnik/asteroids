@@ -5,6 +5,7 @@
 #include "SDL.h"
 #include "spaceship.h"
 #include "asteroid.h"
+#include "laser.h"
 
 class Renderer {
  public:
@@ -12,7 +13,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids);
+  void Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids, std::vector<std::shared_ptr<Laser>> lasers);
   void RenderGameObject(const GameObject *game_object);
   void UpdateWindowTitle(int score, int fps);
 

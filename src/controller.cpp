@@ -26,6 +26,10 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
           spaceship.rotate_state = SpaceShip::RotateState::kRight;
           break;
 
+        case SDLK_SPACE:
+          spaceship.fire = true;
+          break;
+
         default :
           break;
           //spaceship.state = SpaceShip::State::kDecelerate;

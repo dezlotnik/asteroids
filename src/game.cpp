@@ -30,7 +30,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, spaceship);
     Update();
-    renderer.Render(spaceship, asteroids);
+    renderer.Render(spaceship, asteroids, lasers);
 
     frame_end = SDL_GetTicks();
 
@@ -59,6 +59,17 @@ void Game::Update() {
   spaceship.Update();
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     asteroid->Update();
+  }
+
+  if (spaceship.fire) {
+    lasers.push_back(std::make_shared<Laser>(spaceship));
+    spaceship.fire = false;
+  }
+
+  if (!lasers.empty()) {
+    for (std::shared_ptr<Laser> laser : lasers) {
+      laser->Update();
+    }
   }
 
   // check collisions

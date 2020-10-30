@@ -4,6 +4,7 @@
 #include <string>
 #include "SDL_image.h"
 #include "asteroid.h"
+#include "laser.h"
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -58,7 +59,7 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
     SDL_RenderDrawRect(sdl_renderer,&destination);
 }
 
-void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids) {
+void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids, std::vector<std::shared_ptr<Laser>> lasers) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -73,6 +74,13 @@ void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<As
   // Render thruster
   if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate) {
     RenderGameObject(&(spaceship.thruster));
+  }
+
+  // Render lasers
+  if (!lasers.empty()) {
+    for (std::shared_ptr<Laser> laser : lasers) {
+      RenderGameObject(laser.get());
+    }
   }
  
   // Render asteroids

@@ -2,6 +2,7 @@
 #define SPACESHIP_H
 
 #include "game_object.h"
+#include <vector>
 
 class SpaceShip : public GameObject {
 public:
@@ -13,6 +14,7 @@ public:
     ThrusterState thruster_state = ThrusterState::kNone;
     RotateState rotate_state = RotateState::kNone;
     GameObject thruster;
+    bool fire{false};
 
 private:
 };

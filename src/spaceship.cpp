@@ -49,10 +49,11 @@ void SpaceShip::Update() {
   updatePose();
 
   // set thruster pose
-  float x = -0*0.5*thruster.image_width;
+  float x = 0;
   float y = 0.5*image_height + 0.5*thruster.image_height;
   float angle = pose_.angle * 3.14/180.0;
   float xp = cos(angle)*x - sin(angle)*y;
   float yp = sin(angle)*x + cos(angle)*y;
   thruster.setPose(pose_.x + xp, pose_.y + yp, pose_.angle);
+
 }
