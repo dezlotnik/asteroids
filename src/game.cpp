@@ -67,13 +67,10 @@ void Game::Update() {
   }
 
   if (!lasers.empty()) {
-    for (std::shared_ptr<Laser> laser : lasers) {
-      laser->Update();
-    }
-
     auto it = lasers.begin();
     while (it != lasers.end()) {
         std::shared_ptr<Laser> &laser = *it;
+        laser->Update();
         if (laser->getDistance() < laser->getRange()) {
             ++it;
         } else {
