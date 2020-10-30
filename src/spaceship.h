@@ -12,6 +12,7 @@ public:
     bool alive{true};
     ThrusterState thruster_state = ThrusterState::kNone;
     RotateState rotate_state = RotateState::kNone;
+    GameObject thruster;
 
 private:
 };
