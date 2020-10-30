@@ -41,7 +41,7 @@ Asteroid::Asteroid() :
     image_width = std::get<1>(METIOR_1);
     image_height = std::get<2>(METIOR_1);
 
-    n_child_asteroids_ = 0;
+    n_child_asteroids_ = 2;
 }
 
 Asteroid::Asteroid(const Asteroid &asteroid_parent) :
@@ -57,7 +57,7 @@ Asteroid::Asteroid(const Asteroid &asteroid_parent) :
         file_name = std::get<0>(METIOR_2);
         image_width = std::get<1>(METIOR_2);
         image_height = std::get<2>(METIOR_2);
-        n_child_asteroids_ = 0;
+        n_child_asteroids_ = 2;
     } else if (asteroid_parent.file_name ==  std::get<0>(METIOR_2)) {
         file_name = std::get<0>(METIOR_3);
         image_width = std::get<1>(METIOR_3);

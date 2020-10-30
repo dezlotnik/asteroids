@@ -6,6 +6,7 @@
 #include "spaceship.h"
 #include "asteroid.h"
 #include "laser.h"
+#include "enemy.h"
 
 class Renderer {
  public:
@@ -13,7 +14,11 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids, std::vector<std::shared_ptr<Laser>> lasers);
+  void Render(SpaceShip const &spaceship,
+              std::vector<std::shared_ptr<Asteroid>> asteroids,
+              std::vector<std::shared_ptr<Laser>> lasers,
+              std::vector<std::shared_ptr<Enemy>> enemies,
+              std::vector<std::shared_ptr<Laser>> enemy_lasers);
   void RenderGameObject(const GameObject *game_object);
   void UpdateWindowTitle(int score, int fps);
 

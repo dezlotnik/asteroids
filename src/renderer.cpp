@@ -5,6 +5,7 @@
 #include "SDL_image.h"
 #include "asteroid.h"
 #include "laser.h"
+#include "enemy.h"
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -55,11 +56,15 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().angle, NULL, flip );
 
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-    SDL_RenderDrawRect(sdl_renderer,&destination);
+    // SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    // SDL_RenderDrawRect(sdl_renderer,&destination);
 }
 
-void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<Asteroid>> asteroids, std::vector<std::shared_ptr<Laser>> lasers) {
+void Renderer::Render(SpaceShip const &spaceship,
+                      std::vector<std::shared_ptr<Asteroid>> asteroids,
+                      std::vector<std::shared_ptr<Laser>> lasers,
+                      std::vector<std::shared_ptr<Enemy>> enemies,
+                      std::vector<std::shared_ptr<Laser>> enemy_lasers) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -71,6 +76,12 @@ void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<As
   // Render lasers
   if (!lasers.empty()) {
     for (std::shared_ptr<Laser> laser : lasers) {
+      RenderGameObject(laser.get());
+    }
+  }
+
+  if (!enemy_lasers.empty()) {
+    for (std::shared_ptr<Laser> laser : enemy_lasers) {
       RenderGameObject(laser.get());
     }
   }
@@ -87,6 +98,12 @@ void Renderer::Render(SpaceShip const &spaceship, std::vector<std::shared_ptr<As
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     RenderGameObject(asteroid.get());
   }
+
+  // Render enemies
+  for (std::shared_ptr<Enemy> enemy : enemies) {
+    RenderGameObject(enemy.get());
+  }
+
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

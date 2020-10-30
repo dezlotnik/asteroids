@@ -8,11 +8,17 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.setPose(screen_width/2,screen_height/2,0.0);
-    int nAsteroids = 1;
+    int nAsteroids = 3;
     for (size_t i = 0; i < nAsteroids; i++)
     {
         asteroids.push_back(std::make_shared<Asteroid>());
     }
+
+    for (size_t i = 0; i < 1; i++)
+    {
+        enemies.push_back(std::make_shared<Enemy>());
+    }
+
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -30,7 +36,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, spaceship);
     Update();
-    renderer.Render(spaceship, asteroids, lasers);
+    renderer.Render(spaceship, asteroids, lasers, enemies, enemy_lasers);
 
     frame_end = SDL_GetTicks();
 
@@ -61,7 +67,7 @@ void Game::Update() {
   // }
 
   if (asteroids.empty()) {
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 3; i++) {
       asteroids.push_back(std::make_shared<Asteroid>());
     }
   }
@@ -70,6 +76,13 @@ void Game::Update() {
 
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     asteroid->Update();
+  }
+
+  for (std::shared_ptr<Enemy> enemy : enemies) {
+    enemy->Update(spaceship);
+    if (enemy_lasers.empty()) {
+      enemy_lasers.push_back(std::make_shared<Laser>(*enemy.get()));
+    }
   }
 
   if (spaceship.firing) {
@@ -89,6 +102,19 @@ void Game::Update() {
           ++it;
       } else {
           it = lasers.erase(it);
+      }
+    }
+  }
+
+    if (!enemy_lasers.empty()) {
+    auto it = enemy_lasers.begin();
+    while (it != enemy_lasers.end()) {
+      std::shared_ptr<Laser> &laser = *it;
+      laser->Update();
+      if (laser->getDistance() < laser->getRange() && laser->alive) {
+          ++it;
+      } else {
+          it = enemy_lasers.erase(it);
       }
     }
   }
