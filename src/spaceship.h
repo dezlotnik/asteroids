@@ -9,7 +9,7 @@ public:
     SpaceShip();
     void Update();
     float getMaximumSpeed() override {return maximum_speed_;}
-    enum class ThrusterState { kNone, kAccelerate, kDecelerate };
+    enum class ThrusterState { kNone, kAccelerate};
     enum class RotateState { kNone, kLeft, kRight };
     ThrusterState thruster_state = ThrusterState::kNone;
     RotateState rotate_state = RotateState::kNone;
@@ -18,6 +18,7 @@ public:
 
 private:
     float maximum_speed_ = 5.0;
+    float acceleration_ = 0.1;
 };
 
 #endif

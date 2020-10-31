@@ -35,15 +35,10 @@ void SpaceShip::Update() {
   // set speed
   switch (thruster_state) {
     case ThrusterState::kAccelerate:
-      //speed += 1;
-      vx += 0.1*cos(pose_.angle*3.14/180.0);
-      vy += 0.1*sin(pose_.angle*3.14/180.0);
+      vx += acceleration_*cos(pose_.angle*3.14/180.0);
+      vy += acceleration_*sin(pose_.angle*3.14/180.0);
       speed = sqrt(vx*vx + vy*vy);
-      //heading -= 0.1*(heading - pose_.angle);
-      heading = -180.0/3.14*atan2(vx,vy) + 90.0;
-      break;
-    case ThrusterState::kDecelerate:
-      speed -= 0.2;
+      heading = 180.0/3.14*atan2(vy,vx);
       break;
     case ThrusterState::kNone:
     default :
@@ -63,15 +58,6 @@ void SpaceShip::Update() {
     default :
       break;
   }
-
-  //heading = pose_.angle;
-//   vx = speed*cos(heading);
-//   vy = speed*sin(heading);
-//   heading = 180.0/3.14*atan2(vx,-vy) + 90.0;
-  std::cout << "heading = " << heading << "\n";
-  std::cout << "angle = " << pose_.angle << "\n";
-
-  
 
   setVelocity(speed, heading, angular_velocity);
   updatePose();

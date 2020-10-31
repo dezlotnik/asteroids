@@ -14,10 +14,6 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
           spaceship.thruster_state = SpaceShip::ThrusterState::kAccelerate;
           break;
 
-        case SDLK_DOWN:
-          //spaceship.state = SpaceShip::State::kDecelerate;
-          break;
-
         case SDLK_LEFT:
           spaceship.rotate_state = SpaceShip::RotateState::kLeft;
           break;
@@ -38,10 +34,6 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
       switch (e.key.keysym.sym) {
         case SDLK_UP:
           spaceship.thruster_state = SpaceShip::ThrusterState::kNone;
-          break;
-
-        case SDLK_DOWN:
-          //spaceship.state = SpaceShip::State::kDecelerate;
           break;
 
         case SDLK_LEFT:
