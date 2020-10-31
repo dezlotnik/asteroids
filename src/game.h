@@ -30,6 +30,9 @@ class Game {
   std::size_t screen_width;
   std::size_t screen_height;
 
+  int n_asteroids = 3;
+  int n_enemies = 3;
+
   void Update();
 };
 

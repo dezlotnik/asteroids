@@ -44,7 +44,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::RenderGameObject(const GameObject *game_object) {
-    SDL_Surface* surface = IMG_Load((game_object->file_name).c_str()); 
+    SDL_Surface* surface = IMG_Load((game_object->getFileName()).c_str()); 
     // printf("IMG_Load: %s\n", IMG_GetError());
     SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
     SDL_FreeSurface(surface);
@@ -87,7 +87,7 @@ void Renderer::Render(SpaceShip const &spaceship,
   }
 
   // Render thruster
-  if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate) {
+  if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate && spaceship.alive) {
     RenderGameObject(&(spaceship.thruster));
   }
 

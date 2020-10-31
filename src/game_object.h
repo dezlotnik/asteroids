@@ -29,6 +29,7 @@ public:
     void updatePose();
     virtual float getMaximumSpeed() {return maximum_speed_;}
     virtual float getMinimumSpeed() {return minimum_speed_;}
+    std::string getFileName() const {return file_name;}
 
     bool alive{true};
 

@@ -4,6 +4,7 @@
 #include "game_object.h"
 #include "spaceship.h"
 #include <vector>
+#include <random>
 
 class Enemy : public Ship {
 public:
@@ -14,7 +15,11 @@ public:
     bool fire = true;
 
 private:
-    float maximum_speed_ = 3.0;
+    std::random_device dev;
+    std::mt19937 engine;
+    std::uniform_int_distribution<int> random_position;
+
+    float maximum_speed_ = 2.0;
     float distance_to_player_ = 0.0;
 };
 

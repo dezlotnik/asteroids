@@ -11,11 +11,19 @@ SpaceShip::SpaceShip() {
     thruster.image_height = 40;
 
     laser_file_name = "../data/laserBlue01.png";
-    laser_range = 250;
+    laser_range = 500;
     laser_speed = 10;
 }
 
 void SpaceShip::Update() {
+
+  if (!alive) {
+      file_name = "../data/laserBlue10.png";
+      image_width = 37;
+      image_height = 37;
+      return;
+  }
+
   float speed = velocity_.velocity;
   float angular_velocity;
   float heading;
