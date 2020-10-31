@@ -40,12 +40,24 @@ Enemy::Enemy() :
 }
 
 void Enemy::Update(const SpaceShip &spaceship) {
-    if (!alive) {
+    if (hit) {
       file_name = "../data/laserRed10.png";
       image_width = 37;
       image_height = 38;
+
+      if (counter_ > 5) {
+          alive = false;
+      }
+      counter_++;
       return;
     }
+
+    // if (!alive) {
+    //   file_name = "../data/laserRed10.png";
+    //   image_width = 37;
+    //   image_height = 38;
+    //   return;
+    // }
 
     float angle;
     float delta_x = spaceship.getPose().x - getPose().x;

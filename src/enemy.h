@@ -13,6 +13,7 @@ public:
     float getMaximumSpeed() override {return maximum_speed_;}
     float distanceToPlayer() {return distance_to_player_;}
     bool fire = true;
+    bool hit = false;
 
 private:
     std::random_device dev;
@@ -23,6 +24,7 @@ private:
     float minimum_speed_ = 1.0;
     float speed_;
     float distance_to_player_ = 0.0;
+    int counter_ = 0;
 };
 
 #endif

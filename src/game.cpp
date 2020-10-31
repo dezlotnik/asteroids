@@ -69,6 +69,16 @@ void Game::Update() {
     return;
   }
 
+  // generate new asteroids
+  std::vector<std::shared_ptr<Asteroid>> new_asteroids;
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    if (!asteroid->alive) {
+      for (int i = 0; i < asteroid->getNChildAsteroids(); i++) {
+        new_asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
+      }
+    }
+  }
+
   // remove dead asteroids
   if (!asteroids.empty()) {
     auto it = asteroids.begin();
@@ -78,16 +88,6 @@ void Game::Update() {
         ++it;
       } else {
         it = asteroids.erase(it);
-      }
-    }
-  }
-
-  // generate new asteroids
-  std::vector<std::shared_ptr<Asteroid>> new_asteroids;
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
-    if (!asteroid->alive) {
-      for (int i = 0; i < asteroid->getNChildAsteroids(); i++) {
-        new_asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
       }
     }
   }
@@ -181,7 +181,7 @@ void Game::Update() {
     }
     for (std::shared_ptr<Enemy> enemy : enemies) {
       if (CollisionDetection::detect_collision(*enemy.get(), *asteroid.get())) {
-        enemy->alive = false;
+        enemy->hit = true;
       }
     }
   }
@@ -223,7 +223,7 @@ void Game::Update() {
     for (std::shared_ptr<Enemy> enemy : enemies) {
       if (CollisionDetection::detect_point_collision(*enemy.get(),x,y)) {
         laser->alive = false;
-        enemy->alive = false;
+        enemy->hit = true;
         score++;
       }
     }
