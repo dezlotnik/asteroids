@@ -81,7 +81,7 @@ void Renderer::Render(SpaceShip const &spaceship,
   }
 
   // Render thruster
-  if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate && spaceship.alive) {
+  if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate && spaceship.isAlive()) {
     RenderGameObject(&(spaceship.thruster));
   }
 

@@ -34,8 +34,8 @@ public:
     void setImageName(std::string name) {image_name_ = name;}
     void setHeight(float height) {height_ = height;}
     void setWidth(float width) {width_ = width;}
-
-    bool alive{true};
+    bool isAlive() const {return alive_;}
+    virtual void kill() {alive_ = false;}
 
 protected:
     float maximum_speed_ = 10.0;
@@ -45,6 +45,7 @@ protected:
     std::string image_name_;
     int height_;
     int width_;
+    bool alive_ = true;
 };
 
 class Ship : public GameObject {

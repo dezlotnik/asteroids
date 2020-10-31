@@ -26,6 +26,7 @@ public:
     SpaceShip();
     void Update();
     float getMaximumSpeed() override {return maximum_speed_;}
+    void kill() override;
     enum class ThrusterState { kNone, kAccelerate};
     enum class RotateState { kNone, kLeft, kRight };
     ThrusterState thruster_state = ThrusterState::kNone;

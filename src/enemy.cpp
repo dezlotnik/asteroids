@@ -49,16 +49,24 @@ Enemy::Enemy() :
     setPose(x,y,0);
 }
 
-void Enemy::Update(const SpaceShip &spaceship) {
-    if (hit) {
-      setImageName(kExplosionImageName);
-      setWidth(kExplosionWidth);
-      setHeight(kExplosionHeight);
+void Enemy::kill() {
+    setImageName(kExplosionImageName);
+    setWidth(kExplosionWidth);
+    setHeight(kExplosionHeight);
+    kill_time_ = std::chrono::system_clock::now();
+    exploding_ = true;
+}
 
-      if (counter_ > 5) {
-          alive = false;
+void Enemy::Update(const SpaceShip &spaceship) {
+    if (!isAlive()) {
+        return;
+    }
+
+    if (exploding_) {
+      long time_since_explosion = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - kill_time_).count();
+      if (time_since_explosion >=  explosion_duration) {
+          alive_ = false;
       }
-      counter_++;
       return;
     }
 

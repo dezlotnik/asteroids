@@ -21,10 +21,10 @@ public:
 
     Enemy();
     void Update(const SpaceShip &spaceship);
+    void kill() override;
     float getMaximumSpeed() override {return maximum_speed_;}
     float distanceToPlayer() {return distance_to_player_;}
     bool fire = true;
-    bool hit = false;
 
 private:
     std::random_device dev;
@@ -36,6 +36,10 @@ private:
     float speed_;
     float distance_to_player_ = 0.0;
     int counter_ = 0;
+    std::chrono::time_point<std::chrono::system_clock> kill_time_;
+    long explosion_duration = 100; //milliseconds
+    bool exploding_ = false;
+
 };
 
 #endif

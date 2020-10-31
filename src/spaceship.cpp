@@ -31,12 +31,16 @@ SpaceShip::SpaceShip() {
     laser_speed = 10;
 }
 
+void SpaceShip::kill() {
+    alive_ = false;
+    setImageName(kExplosionImageName);
+    setWidth(kExplosionWidth);
+    setHeight(kExplosionHeight);
+}
+
 void SpaceShip::Update() {
 
-  if (!alive) {
-      setImageName(kExplosionImageName);
-      setWidth(kExplosionWidth);
-      setHeight(kExplosionHeight);
+  if (!isAlive()) {
       return;
   }
 
