@@ -37,7 +37,7 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
     } else if (e.type == SDL_KEYUP) {
       switch (e.key.keysym.sym) {
         case SDLK_UP:
-          spaceship.thruster_state = SpaceShip::ThrusterState::kDecelerate;
+          spaceship.thruster_state = SpaceShip::ThrusterState::kNone;
           break;
 
         case SDLK_DOWN:

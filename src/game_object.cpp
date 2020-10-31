@@ -23,8 +23,8 @@ void GameObject::setVelocity(float velocity, float heading, float angular_veloci
 }
 
 void GameObject::updatePose() {
-    pose_.x -= cos((velocity_.heading + 90.0) * 3.14/180.0) * velocity_.velocity;
-    pose_.y -= sin((velocity_.heading + 90.0) * 3.14/180.0) * velocity_.velocity;
+    pose_.x += cos((velocity_.heading) * 3.14/180.0) * velocity_.velocity;
+    pose_.y += sin((velocity_.heading) * 3.14/180.0) * velocity_.velocity;
     pose_.angle += velocity_.angular_velocity;
     
     pose_.x = fmod(pose_.x + kScreenWidth, kScreenWidth);

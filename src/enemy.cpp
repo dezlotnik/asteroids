@@ -7,12 +7,12 @@ Enemy::Enemy() :
     random_position(0,  2*kScreenWidth + 2*kScreenHeight)
 {
     file_name = "../data/enemyRed2.png";
-    image_width = 52;
-    image_height = 42;
+    image_width = 42;
+    image_height = 52;
 
     laser_file_name = "../data/laserRed01.png";
-    laser_range = 100;
-    laser_speed = 8;
+    laser_range = 250;
+    laser_speed = 3;
 
     int p = random_position(engine);
     float y;
@@ -44,10 +44,10 @@ void Enemy::Update(const SpaceShip &spaceship) {
     }
 
     float angle;
-    float delta_x = getPose().x - spaceship.getPose().x;
-    float delta_y = getPose().y - spaceship.getPose().y;
+    float delta_x = spaceship.getPose().x - getPose().x;
+    float delta_y = spaceship.getPose().y - getPose().y;
     
-    angle = -180.0/3.14*atan2(delta_x, delta_y);
+    angle = 180.0/3.14*atan2(delta_y,delta_x);
 
     setPose(getPose().x,getPose().y,angle);
     setVelocity(getMaximumSpeed(), angle, 0.0);
