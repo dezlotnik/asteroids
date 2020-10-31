@@ -52,21 +52,14 @@ void Enemy::Update(const SpaceShip &spaceship) {
       return;
     }
 
-    // if (!alive) {
-    //   file_name = "../data/laserRed10.png";
-    //   image_width = 37;
-    //   image_height = 38;
-    //   return;
-    // }
-
-    float angle;
+    float yaw;
     float delta_x = spaceship.getPose().x - getPose().x;
     float delta_y = spaceship.getPose().y - getPose().y;
     
-    angle = 180.0/3.14*atan2(delta_y,delta_x);
+    yaw = 180.0/3.14*atan2(delta_y,delta_x);
 
-    setPose(getPose().x,getPose().y,angle);
-    setVelocity(speed_, angle, 0.0);
+    setPose(getPose().x,getPose().y,yaw);
+    setVelocity(speed_, yaw, 0.0);
 
     distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
 

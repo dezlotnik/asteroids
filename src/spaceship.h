@@ -2,6 +2,7 @@
 #define SPACESHIP_H
 
 #include "game_object.h"
+#include "laser.h"
 #include <vector>
 
 class SpaceShip : public Ship {

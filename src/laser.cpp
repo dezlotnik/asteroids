@@ -11,13 +11,13 @@ Laser::Laser(const Ship &ship) {
     // set laser pose
     float x = 0.5*ship.image_height;
     float y = 0;
-    float angle = ship.getPose().angle * 3.14/180.0;
+    float angle = ship.getPose().yaw * 3.14/180.0;
     float xp = cos(angle)*x - sin(angle)*y;
     float yp = sin(angle)*x + cos(angle)*y;
-    setPose(ship.getPose().x + xp, ship.getPose().y + yp, ship.getPose().angle);
+    setPose(ship.getPose().x + xp, ship.getPose().y + yp, ship.getPose().yaw);
 
     // set laser velocity
-    setVelocity(laser_speed_, ship.getPose().angle, 0);
+    setVelocity(laser_speed_, ship.getPose().yaw, 0);
 }
 
 void Laser::Update() {
@@ -28,7 +28,7 @@ void Laser::Update() {
 void Laser::getFrontPoint(float &x, float &y) {
     float x_f = image_height/2.0;
     float y_f = 0;
-    float angle = pose_.angle * 3.14/180.0;
+    float angle = pose_.yaw * 3.14/180.0;
     x = pose_.x + cos(angle)*x_f - sin(angle)*y_f;
     y = pose_.y + sin(angle)*x_f + cos(angle)*y_f;
 }

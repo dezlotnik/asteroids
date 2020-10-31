@@ -35,8 +35,8 @@ void SpaceShip::Update() {
   // set speed
   switch (thruster_state) {
     case ThrusterState::kAccelerate:
-      vx += acceleration_*cos(pose_.angle*3.14/180.0);
-      vy += acceleration_*sin(pose_.angle*3.14/180.0);
+      vx += acceleration_*cos(pose_.yaw*3.14/180.0);
+      vy += acceleration_*sin(pose_.yaw*3.14/180.0);
       speed = sqrt(vx*vx + vy*vy);
       heading = 180.0/3.14*atan2(vy,vx);
       break;
@@ -65,9 +65,9 @@ void SpaceShip::Update() {
   // set thruster pose
   float x = -0.5*image_width - 0.5*thruster.image_width;
   float y = 0; 
-  float angle = pose_.angle * 3.14/180.0;
+  float angle = pose_.yaw * 3.14/180.0;
   float xp = cos(angle)*x - sin(angle)*y;
   float yp = sin(angle)*x + cos(angle)*y;
-  thruster.setPose(pose_.x + xp, pose_.y + yp, pose_.angle);
+  thruster.setPose(pose_.x + xp, pose_.y + yp, pose_.yaw);
 
 }

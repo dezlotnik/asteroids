@@ -13,7 +13,7 @@ public:
     struct Pose {
         float x = 0.0;
         float y = 0.0;
-        float angle = 0.0;
+        float yaw = 0.0;
     };
     struct Velocity {
         float velocity = 0.0;
@@ -21,11 +21,10 @@ public:
         float angular_velocity = 0.0;
     };
     
-    void setPose(float x, float y, float angle);
+    void setPose(float x, float y, float yaw);
     Pose getPose() const {return pose_;}
     void setVelocity(float velocity, float heading, float angular_velocity);
     Velocity getVelocity() const {return velocity_;}
-    void setDirection(float angle);
     void updatePose();
     virtual float getMaximumSpeed() {return maximum_speed_;}
     virtual float getMinimumSpeed() {return minimum_speed_;}
