@@ -4,7 +4,7 @@
 #include "game_object.h"
 #include <vector>
 
-class SpaceShip : public GameObject {
+class SpaceShip : public Ship {
 public:
     SpaceShip();
     void Update();

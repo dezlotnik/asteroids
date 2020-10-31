@@ -46,4 +46,11 @@ protected:
     Velocity velocity_;
 };
 
+class Ship : public GameObject {
+public:
+    std::string laser_file_name = "";
+    float laser_range;
+    float laser_speed;
+};
+
 #endif

@@ -80,7 +80,7 @@ void Game::Update() {
 
   for (std::shared_ptr<Enemy> enemy : enemies) {
     enemy->Update(spaceship);
-    if (enemy_lasers.empty()) {
+    if (enemy_lasers.empty() && (enemy->distanceToPlayer() < enemy->laser_range)) {
       enemy_lasers.push_back(std::make_shared<Laser>(*enemy.get()));
     }
   }

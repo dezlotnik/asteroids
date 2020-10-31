@@ -9,6 +9,10 @@ SpaceShip::SpaceShip() {
     thruster.file_name = "../data/fire00.png";
     thruster.image_width = 16;
     thruster.image_height = 40;
+
+    laser_file_name = "../data/laserBlue01.png";
+    laser_range = 250;
+    laser_speed = 10;
 }
 
 void SpaceShip::Update() {

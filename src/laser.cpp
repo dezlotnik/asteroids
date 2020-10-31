@@ -1,21 +1,23 @@
 #include "laser.h"
 #include "spaceship.h"
 
-Laser::Laser(const GameObject &game_object) {
-    file_name = "../data/laserBlue01.png";
+Laser::Laser(const Ship &ship) {
+    file_name = ship.laser_file_name;
     image_height = 54;
     image_width = 9;
+    laser_speed_ = ship.laser_speed;
+    range_ = ship.laser_range;
 
     // set laser pose
     float x = 0;
-    float y = -0.5*game_object.image_height;
-    float angle = game_object.getPose().angle * 3.14/180.0;
+    float y = -0.5*ship.image_height;
+    float angle = ship.getPose().angle * 3.14/180.0;
     float xp = cos(angle)*x - sin(angle)*y;
     float yp = sin(angle)*x + cos(angle)*y;
-    setPose(game_object.getPose().x + xp, game_object.getPose().y + yp, game_object.getPose().angle);
+    setPose(ship.getPose().x + xp, ship.getPose().y + yp, ship.getPose().angle);
 
     // set laser velocity
-    setVelocity(laser_speed_, game_object.getPose().angle, 0);
+    setVelocity(laser_speed_, ship.getPose().angle, 0);
 }
 
 void Laser::Update() {
