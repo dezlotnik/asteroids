@@ -168,12 +168,19 @@ void Game::Update() {
   // check asteroid collisions
   for (std::shared_ptr<Asteroid> asteroid : asteroids) {
     if (CollisionDetection::detect_collision(spaceship, *asteroid.get())) {
-      //spaceship.alive = false;
+      spaceship.alive = false;
     }
     for (std::shared_ptr<Enemy> enemy : enemies) {
       if (CollisionDetection::detect_collision(*enemy.get(), *asteroid.get())) {
         enemy->alive = false;
       }
+    }
+  }
+
+  // check collisions with enemies
+  for (std::shared_ptr<Enemy> enemy : enemies) {
+    if (CollisionDetection::detect_collision(spaceship, *enemy.get())) {
+      spaceship.alive = false;
     }
   }
 
@@ -184,7 +191,7 @@ void Game::Update() {
     laser->getFrontPoint(x,y);
     if (CollisionDetection::detect_point_collision(spaceship,x,y)) {
       laser->alive = false;
-      //spaceship.alive = false;
+      spaceship.alive = false;
     }
   }
 

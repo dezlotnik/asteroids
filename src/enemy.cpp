@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "spaceship.h"
 #include <math.h>
+#include <random>
 
 Enemy::Enemy() : 
     engine(dev()),
@@ -32,6 +33,9 @@ Enemy::Enemy() :
         x = 0.0;
     }
 
+    std::uniform_real_distribution<float> random_speed(minimum_speed_, maximum_speed_);
+    speed_ = random_speed(engine);
+
     setPose(x,y,0);
 }
 
@@ -50,7 +54,7 @@ void Enemy::Update(const SpaceShip &spaceship) {
     angle = 180.0/3.14*atan2(delta_y,delta_x);
 
     setPose(getPose().x,getPose().y,angle);
-    setVelocity(getMaximumSpeed(), angle, 0.0);
+    setVelocity(speed_, angle, 0.0);
 
     distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
 
