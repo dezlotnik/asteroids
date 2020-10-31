@@ -141,7 +141,7 @@ void Game::Update() {
   if (spaceship.firing) {
     if (lasers.empty()) {
       lasers.push_back(std::make_shared<Laser>(spaceship));
-    } else if (lasers.back()->getDistance() > lasers.back()->image_width) {
+    } else if (lasers.back()->getDistance() > lasers.back()->getWidth()) {
       lasers.push_back(std::make_shared<Laser>(spaceship));
     }
   }

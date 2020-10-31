@@ -37,9 +37,9 @@ Asteroid::Asteroid() :
     setVelocity(random_speed(engine),random_heading(engine),random_angular_velocity(engine));
     setPose(x,y,0);
 
-    file_name = std::get<0>(METIOR_1);
-    image_width = std::get<1>(METIOR_1);
-    image_height = std::get<2>(METIOR_1);
+    setImageName(std::get<0>(METIOR_1));
+    setWidth(std::get<1>(METIOR_1));
+    setHeight(std::get<2>(METIOR_1));
 
     n_child_asteroids_ = 2;
 }
@@ -53,15 +53,15 @@ Asteroid::Asteroid(const Asteroid &asteroid_parent) :
     pose_ = asteroid_parent.pose_;
     setVelocity(random_speed(engine),random_heading(engine),random_angular_velocity(engine));
 
-    if (asteroid_parent.file_name ==  std::get<0>(METIOR_1)) {
-        file_name = std::get<0>(METIOR_2);
-        image_width = std::get<1>(METIOR_2);
-        image_height = std::get<2>(METIOR_2);
+    if (asteroid_parent.getImageName() ==  std::get<0>(METIOR_1)) {
+        setImageName(std::get<0>(METIOR_2));
+        setWidth(std::get<1>(METIOR_2));
+        setHeight(std::get<2>(METIOR_2));
         n_child_asteroids_ = 2;
-    } else if (asteroid_parent.file_name ==  std::get<0>(METIOR_2)) {
-        file_name = std::get<0>(METIOR_3);
-        image_width = std::get<1>(METIOR_3);
-        image_height = std::get<2>(METIOR_3);
+    } else if (asteroid_parent.getImageName() ==  std::get<0>(METIOR_2)) {
+        setImageName(std::get<0>(METIOR_3));
+        setWidth(std::get<1>(METIOR_3));
+        setHeight(std::get<2>(METIOR_3));
         n_child_asteroids_ = 0;
     }
 }

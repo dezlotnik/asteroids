@@ -8,12 +8,9 @@
 #include "enemy.h"
 
 Renderer::Renderer(const std::size_t screen_width,
-                   const std::size_t screen_height,
-                   const std::size_t grid_width, const std::size_t grid_height)
+                   const std::size_t screen_height)
     : screen_width(screen_width),
-      screen_height(screen_height),
-      grid_width(grid_width),
-      grid_height(grid_height) {
+      screen_height(screen_height) {
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize.\n";
@@ -44,15 +41,15 @@ Renderer::~Renderer() {
 }
 
 void Renderer::RenderGameObject(const GameObject *game_object) {
-    SDL_Surface* surface = IMG_Load((game_object->getFileName()).c_str()); 
+    SDL_Surface* surface = IMG_Load((game_object->getImageName()).c_str()); 
     // printf("IMG_Load: %s\n", IMG_GetError());
     SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
     SDL_FreeSurface(surface);
     SDL_Rect destination;
-    destination.x = static_cast<int>(game_object->getPose().x - game_object->image_width/2);
-    destination.y = static_cast<int>(game_object->getPose().y - game_object->image_height/2);
-    destination.w = game_object->image_width;
-    destination.h = game_object->image_height;
+    destination.x = static_cast<int>(game_object->getPose().x - game_object->getWidth()/2);
+    destination.y = static_cast<int>(game_object->getPose().y - game_object->getHeight()/2);
+    destination.w = game_object->getWidth();
+    destination.h = game_object->getHeight();
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().yaw, NULL, flip );
 
@@ -65,9 +62,6 @@ void Renderer::Render(SpaceShip const &spaceship,
                       std::vector<std::shared_ptr<Laser>> lasers,
                       std::vector<std::shared_ptr<Enemy>> enemies,
                       std::vector<std::shared_ptr<Laser>> enemy_lasers) {
-  SDL_Rect block;
-  block.w = screen_width / grid_width;
-  block.h = screen_height / grid_height;
 
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);

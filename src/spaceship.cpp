@@ -2,16 +2,31 @@
 #include <math.h>
 #include <iostream>
 
+const std::string SpaceShip::kSpaceShipImageName = "../data/playerShip3_blue.png";
+const float SpaceShip::kSpaceShipHeight = 49/1.5;
+const float SpaceShip::kSpaceShipWidth = 37/1.5;
+
+const std::string SpaceShip::kExplosionImageName = "../data/laserBlue10.png";
+const float SpaceShip::kExplosionWidth = 37/1.5;
+const float SpaceShip::kExplosionHeight = 37/1.5;
+
+const std::string SpaceShip::kLaserImageName = "../data/laserBlue01.png";
+
+const std::string SpaceShip::kThrusterImageName = "../data/fire00.png";
+const float SpaceShip::kThrusterWidth = 40/1.5;
+const float SpaceShip::kThrusterHeight = 16/1.5;
+
 SpaceShip::SpaceShip() {
-    file_name = "../data/playerShip3_blue.png";
-    image_height = 49;
-    image_width = 37;
 
-    thruster.file_name = "../data/fire00.png";
-    thruster.image_height = 16;
-    thruster.image_width = 40;
+    setImageName(kSpaceShipImageName);
+    setWidth(kSpaceShipWidth);
+    setHeight(kSpaceShipHeight);
 
-    laser_file_name = "../data/laserBlue01.png";
+    thruster.setImageName(kThrusterImageName);
+    thruster.setWidth(kThrusterWidth);
+    thruster.setHeight(kThrusterHeight);
+
+    laser_image_name = kLaserImageName;
     laser_range = 500;
     laser_speed = 10;
 }
@@ -19,9 +34,9 @@ SpaceShip::SpaceShip() {
 void SpaceShip::Update() {
 
   if (!alive) {
-      file_name = "../data/laserBlue10.png";
-      image_width = 37;
-      image_height = 37;
+      setImageName(kExplosionImageName);
+      setWidth(kExplosionWidth);
+      setHeight(kExplosionHeight);
       return;
   }
 
@@ -63,7 +78,7 @@ void SpaceShip::Update() {
   updatePose();
 
   // set thruster pose
-  float x = -0.5*image_width - 0.5*thruster.image_width;
+  float x = -0.5*getWidth() - 0.5*thruster.getWidth();
   float y = 0; 
   float angle = pose_.yaw * 3.14/180.0;
   float xp = cos(angle)*x - sin(angle)*y;

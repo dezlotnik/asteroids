@@ -8,7 +8,7 @@ using namespace AsteroidConstants;
 
 int main() {
 
-    Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
+    Renderer renderer(kScreenWidth, kScreenHeight);
     Controller controller;
     Game game(kScreenWidth, kScreenHeight);
     game.Run(controller, renderer, kMsPerFrame);

@@ -28,27 +28,28 @@ public:
     void updatePose();
     virtual float getMaximumSpeed() {return maximum_speed_;}
     virtual float getMinimumSpeed() {return minimum_speed_;}
-    std::string getFileName() const {return file_name;}
+    std::string getImageName() const {return image_name_;}
+    float getHeight() const {return height_;}
+    float getWidth() const {return width_;}
+    void setImageName(std::string name) {image_name_ = name;}
+    void setHeight(float height) {height_ = height;}
+    void setWidth(float width) {width_ = width;}
 
     bool alive{true};
-
-    float screen_height = kScreenHeight;
-    float screen_width = kScreenWidth;
-
-    std::string file_name;
-    int image_height;
-    int image_width;
 
 protected:
     float maximum_speed_ = 10.0;
     float minimum_speed_ = 0.0;
     Pose pose_;
     Velocity velocity_;
+    std::string image_name_;
+    int height_;
+    int width_;
 };
 
 class Ship : public GameObject {
 public:
-    std::string laser_file_name = "";
+    std::string laser_image_name;
     float laser_range;
     float laser_speed;
 };

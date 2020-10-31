@@ -8,6 +8,17 @@
 
 class Enemy : public Ship {
 public:
+
+    static const float kEnemyWidth;
+    static const float kEnemyHeight;
+    static const std::string kEnemyImageName;
+
+    static const float kExplosionWidth;
+    static const float kExplosionHeight;
+    static const std::string kExplosionImageName;
+
+    static const std::string kLaserImageName;
+
     Enemy();
     void Update(const SpaceShip &spaceship);
     float getMaximumSpeed() override {return maximum_speed_;}

@@ -3,15 +3,25 @@
 #include <math.h>
 #include <random>
 
+const float Enemy::kEnemyWidth = 42/1.5;
+const float Enemy::kEnemyHeight = 52/1.5;
+const std::string Enemy::kEnemyImageName = "../data/enemyRed2.png";
+
+const float Enemy::kExplosionWidth = 37/1.5;
+const float Enemy::kExplosionHeight = 38/1.5;
+const std::string Enemy::kExplosionImageName = "../data/laserRed10.png";
+
+const std::string Enemy::kLaserImageName = "../data/laserRed01.png";
+
 Enemy::Enemy() : 
     engine(dev()),
     random_position(0,  2*kScreenWidth + 2*kScreenHeight)
 {
-    file_name = "../data/enemyRed2.png";
-    image_width = 42;
-    image_height = 52;
+    setImageName(kEnemyImageName);
+    setWidth(kEnemyWidth);
+    setHeight(kEnemyHeight);
 
-    laser_file_name = "../data/laserRed01.png";
+    laser_image_name = kLaserImageName;
     laser_range = 500;
     laser_speed = 5;
 
@@ -41,9 +51,9 @@ Enemy::Enemy() :
 
 void Enemy::Update(const SpaceShip &spaceship) {
     if (hit) {
-      file_name = "../data/laserRed10.png";
-      image_width = 37;
-      image_height = 38;
+      setImageName(kExplosionImageName);
+      setWidth(kExplosionWidth);
+      setHeight(kExplosionHeight);
 
       if (counter_ > 5) {
           alive = false;

@@ -4,9 +4,25 @@
 #include "game_object.h"
 #include "laser.h"
 #include <vector>
+#include <string>
 
 class SpaceShip : public Ship {
 public:
+
+    static const float kSpaceShipWidth;
+    static const float kSpaceShipHeight;
+    static const std::string kSpaceShipImageName;
+
+    static const float kExplosionWidth;
+    static const float kExplosionHeight;
+    static const std::string kExplosionImageName;
+
+    static const std::string kLaserImageName;
+
+    static const float kThrusterWidth;
+    static const float kThrusterHeight;
+    static const std::string kThrusterImageName;
+
     SpaceShip();
     void Update();
     float getMaximumSpeed() override {return maximum_speed_;}
