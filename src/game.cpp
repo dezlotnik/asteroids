@@ -62,76 +62,11 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
+
   spaceship.Update();
 
   if (!spaceship.alive) {
     return;
-  }
-
-  if (asteroids.size() < n_asteroids) {
-    for (int i = 0; i < (n_asteroids - asteroids.size()); i++) {
-      asteroids.push_back(std::make_shared<Asteroid>());
-    }
-  }
-
-  if (enemies.size() < n_enemies) {
-    for (int i = 0; i < (n_enemies - enemies.size()); i++) {
-      enemies.push_back(std::make_shared<Enemy>());
-    }
-  }
-
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
-    asteroid->Update();
-  }
-
-  for (std::shared_ptr<Enemy> enemy : enemies) {
-    enemy->Update(spaceship);
-    if (enemy_lasers.empty() && (enemy->distanceToPlayer() < enemy->laser_range)) {
-      enemy_lasers.push_back(std::make_shared<Laser>(*enemy.get()));
-    }
-  }
-
-  if (spaceship.firing) {
-    if (lasers.empty()) {
-      lasers.push_back(std::make_shared<Laser>(spaceship));
-    } else if (lasers.back()->getDistance() > lasers.back()->image_width) {
-      lasers.push_back(std::make_shared<Laser>(spaceship));
-    }
-  }
-
-  if (!lasers.empty()) {
-    auto it = lasers.begin();
-    while (it != lasers.end()) {
-      std::shared_ptr<Laser> &laser = *it;
-      laser->Update();
-      if (laser->getDistance() < laser->getRange() && laser->alive) {
-          ++it;
-      } else {
-          it = lasers.erase(it);
-      }
-    }
-  }
-
-  if (!enemy_lasers.empty()) {
-    auto it = enemy_lasers.begin();
-    while (it != enemy_lasers.end()) {
-      std::shared_ptr<Laser> &laser = *it;
-      laser->Update();
-      if (laser->getDistance() < laser->getRange() && laser->alive) {
-          ++it;
-      } else {
-          it = enemy_lasers.erase(it);
-      }
-    }
-  }
-
-  std::vector<std::shared_ptr<Asteroid>> new_asteroids;
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
-    if (!asteroid->alive) {
-      for (int i = 0; i < asteroid->getNChildAsteroids(); i++) {
-        new_asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
-      }
-    }
   }
 
   // remove dead asteroids
@@ -144,6 +79,28 @@ void Game::Update() {
       } else {
         it = asteroids.erase(it);
       }
+    }
+  }
+
+  // generate new asteroids
+  std::vector<std::shared_ptr<Asteroid>> new_asteroids;
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    if (!asteroid->alive) {
+      for (int i = 0; i < asteroid->getNChildAsteroids(); i++) {
+        new_asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
+      }
+    }
+  }
+
+  // add new asteroids
+  for (std::shared_ptr<Asteroid> new_asteroid : new_asteroids) {
+    asteroids.push_back(new_asteroid);
+  }
+
+  // respawn asteroids
+  if (asteroids.size() < n_asteroids) {
+    for (int i = 0; i < (n_asteroids - asteroids.size()); i++) {
+      asteroids.push_back(std::make_shared<Asteroid>());
     }
   }
 
@@ -160,9 +117,61 @@ void Game::Update() {
     }
   }
 
-  // add new asteroids
-  for (std::shared_ptr<Asteroid> new_asteroid : new_asteroids) {
-    asteroids.push_back(new_asteroid);
+  // respawn enemies
+  if (enemies.size() < n_enemies) {
+    for (int i = 0; i < (n_enemies - enemies.size()); i++) {
+      enemies.push_back(std::make_shared<Enemy>());
+    }
+  }
+
+  // update asteroids
+  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    asteroid->Update();
+  }
+
+  // update enemies
+  for (std::shared_ptr<Enemy> enemy : enemies) {
+    enemy->Update(spaceship);
+    if (enemy_lasers.empty() && (enemy->distanceToPlayer() < enemy->laser_range)) {
+      enemy_lasers.push_back(std::make_shared<Laser>(*enemy.get()));
+    }
+  }
+
+  // update lasers
+  if (spaceship.firing) {
+    if (lasers.empty()) {
+      lasers.push_back(std::make_shared<Laser>(spaceship));
+    } else if (lasers.back()->getDistance() > lasers.back()->image_width) {
+      lasers.push_back(std::make_shared<Laser>(spaceship));
+    }
+  }
+
+  // remove dead lasers
+  if (!lasers.empty()) {
+    auto it = lasers.begin();
+    while (it != lasers.end()) {
+      std::shared_ptr<Laser> &laser = *it;
+      laser->Update();
+      if (laser->getDistance() < laser->getRange() && laser->alive) {
+          ++it;
+      } else {
+          it = lasers.erase(it);
+      }
+    }
+  }
+
+  // remove dead enemy lasers
+  if (!enemy_lasers.empty()) {
+    auto it = enemy_lasers.begin();
+    while (it != enemy_lasers.end()) {
+      std::shared_ptr<Laser> &laser = *it;
+      laser->Update();
+      if (laser->getDistance() < laser->getRange() && laser->alive) {
+          ++it;
+      } else {
+          it = enemy_lasers.erase(it);
+      }
+    }
   }
 
   // check asteroid collisions

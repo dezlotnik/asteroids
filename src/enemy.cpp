@@ -12,8 +12,8 @@ Enemy::Enemy() :
     image_height = 52;
 
     laser_file_name = "../data/laserRed01.png";
-    laser_range = 250;
-    laser_speed = 3;
+    laser_range = 150;
+    laser_speed = 5;
 
     int p = random_position(engine);
     float y;

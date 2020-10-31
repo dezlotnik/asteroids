@@ -20,7 +20,7 @@ private:
     std::uniform_int_distribution<int> random_position;
 
     float maximum_speed_ = 2.0;
-    float minimum_speed_ = 0.5;
+    float minimum_speed_ = 1.0;
     float speed_;
     float distance_to_player_ = 0.0;
 };

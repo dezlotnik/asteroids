@@ -18,7 +18,7 @@ public:
 
 private:
     float maximum_speed_ = 5.0;
-    float acceleration_ = 0.1;
+    float acceleration_ = 0.25;
 };
 
 #endif
