@@ -58,6 +58,16 @@ void Enemy::kill() {
     exploding_ = true;
 }
 
+void Enemy::controller(float yaw_error, float &acceleration, float &angular_velocity) {
+    angular_velocity = 1*(yaw_error);
+    if (angular_velocity > 10.0) {
+        angular_velocity = 10;
+    } else if (angular_velocity < -10.0) {
+        angular_velocity = -10;
+    }
+    acceleration = 0.25;
+}
+
 void Enemy::Update(const SpaceShip &spaceship) {
     if (!isAlive()) {
         return;
@@ -83,17 +93,11 @@ void Enemy::Update(const SpaceShip &spaceship) {
     
     yaw = 180.0/3.14*atan2(delta_y,delta_x);
 
-    float angular_velocity, accel;
-    angular_velocity = 1*(yaw - getPose().yaw);
-    if (angular_velocity > 10.0) {
-        angular_velocity = 10;
-    } else if (angular_velocity < -10.0) {
-        angular_velocity = -10;
-    }
-    accel = 0.1*(distanceToPlayer());
-    float speed = speed_ + accel;
+    float angular_velocity, acceleration;
+    float yaw_error = 1*(yaw - getPose().yaw);
+    controller(yaw_error, acceleration, angular_velocity);
 
-    propagateState(accel,angular_velocity);
+    propagateState(acceleration,angular_velocity);
 
     //setPose(getPose().x,getPose().y,yaw);
     //setVelocity(speed, yaw, angular_velocity);

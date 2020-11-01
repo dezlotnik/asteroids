@@ -24,6 +24,7 @@ public:
     void kill() override;
     float getMaximumSpeed() override {return maximum_speed_;}
     float distanceToPlayer() {return distance_to_player_;}
+    void controller(float yaw_error, float &acceleration, float &angular_velocity);
     bool fire = true;
     bool render = true;
 
