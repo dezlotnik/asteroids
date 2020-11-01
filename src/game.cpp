@@ -134,9 +134,6 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
-
-  spaceship.Update();
-
   if (!spaceship.isAlive()) {
     return;
   }
@@ -181,6 +178,9 @@ void Game::Update() {
       }
     }
   }
+
+  // update player spaceship
+  spaceship.Update();
 
   // update asteroids
   for (std::unique_ptr<Asteroid> &asteroid : asteroids) {
