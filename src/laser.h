@@ -3,7 +3,8 @@
 
 #include <random>
 #include "game_object.h"
-#include "spaceship.h"
+
+class Ship;
 
 class Laser : public GameObject {
 public:

@@ -15,9 +15,7 @@ class Renderer {
 
   void Render(SpaceShip const &spaceship,
               std::vector<std::shared_ptr<Asteroid>> asteroids,
-              std::vector<std::shared_ptr<Laser>> lasers,
-              std::vector<std::shared_ptr<Enemy>> enemies,
-              std::vector<std::shared_ptr<Laser>> enemy_lasers);
+              std::vector<std::shared_ptr<Enemy>> enemies);
   void RenderGameObject(const GameObject *game_object);
   void UpdateWindowTitle(int score, int fps);
 

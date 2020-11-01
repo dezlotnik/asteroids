@@ -29,6 +29,7 @@ SpaceShip::SpaceShip() {
     laser_image_name = kLaserImageName;
     laser_range = 500;
     laser_speed = 10;
+    reload_distance = 54; // laser width
 }
 
 void SpaceShip::kill() {
@@ -88,5 +89,11 @@ void SpaceShip::Update() {
   float xp = cos(angle)*x - sin(angle)*y;
   float yp = sin(angle)*x + cos(angle)*y;
   thruster.setPose(pose_.x + xp, pose_.y + yp, pose_.yaw);
+
+  if (firing) {
+      Fire();
+  }
+
+  updateLasers();
 
 }

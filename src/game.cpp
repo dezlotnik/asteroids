@@ -36,7 +36,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, spaceship);
     Update();
-    renderer.Render(spaceship, asteroids, lasers, enemies, enemy_lasers);
+    renderer.Render(spaceship, asteroids, enemies);
 
     frame_end = SDL_GetTicks();
 
@@ -132,46 +132,6 @@ void Game::Update() {
   // update enemies
   for (std::shared_ptr<Enemy> enemy : enemies) {
     enemy->Update(spaceship);
-    if (enemy_lasers.empty() && (enemy->distanceToPlayer() < enemy->laser_range)) {
-      enemy_lasers.push_back(std::make_shared<Laser>(*enemy.get()));
-    }
-  }
-
-  // update lasers
-  if (spaceship.firing) {
-    if (lasers.empty()) {
-      lasers.push_back(std::make_shared<Laser>(spaceship));
-    } else if (lasers.back()->getDistance() > lasers.back()->getWidth()) {
-      lasers.push_back(std::make_shared<Laser>(spaceship));
-    }
-  }
-
-  // remove dead lasers
-  if (!lasers.empty()) {
-    auto it = lasers.begin();
-    while (it != lasers.end()) {
-      std::shared_ptr<Laser> &laser = *it;
-      laser->Update();
-      if (laser->getDistance() < laser->getRange() && laser->isAlive()) {
-          ++it;
-      } else {
-          it = lasers.erase(it);
-      }
-    }
-  }
-
-  // remove dead enemy lasers
-  if (!enemy_lasers.empty()) {
-    auto it = enemy_lasers.begin();
-    while (it != enemy_lasers.end()) {
-      std::shared_ptr<Laser> &laser = *it;
-      laser->Update();
-      if (laser->getDistance() < laser->getRange() && laser->isAlive()) {
-          ++it;
-      } else {
-          it = enemy_lasers.erase(it);
-      }
-    }
   }
 
   // check asteroid collisions
@@ -195,18 +155,20 @@ void Game::Update() {
 
   // check enemy laser collisions
   // kill spaceship and laser if collision detected
-  for (std::shared_ptr<Laser> laser : enemy_lasers) {
-    float x, y;
-    laser->getFrontPoint(x,y);
-    if (CollisionDetection::detect_point_collision(spaceship,x,y)) {
-      laser->kill();
-      spaceship.kill();
+  for (std::shared_ptr<Enemy> enemy : enemies) {
+    for (std::shared_ptr<Laser> laser : enemy->lasers) {
+      float x, y;
+      laser->getFrontPoint(x,y);
+      if (CollisionDetection::detect_point_collision(spaceship,x,y)) {
+        laser->kill();
+        spaceship.kill();
+      }
     }
   }
 
   // check laser collisions
   // kill asteroid or enemy and laser if collision detected
-  for (std::shared_ptr<Laser> laser : lasers) {
+  for (std::shared_ptr<Laser> laser : spaceship.lasers) {
     float x, y;
     laser->getFrontPoint(x,y);
 

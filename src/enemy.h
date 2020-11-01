@@ -1,7 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "game_object.h"
+#include "ship.h"
 #include "spaceship.h"
 #include <vector>
 #include <random>
@@ -25,6 +25,7 @@ public:
     float getMaximumSpeed() override {return maximum_speed_;}
     float distanceToPlayer() {return distance_to_player_;}
     bool fire = true;
+    bool render = true;
 
 private:
     std::random_device dev;
@@ -37,7 +38,7 @@ private:
     float distance_to_player_ = 0.0;
     int counter_ = 0;
     std::chrono::time_point<std::chrono::system_clock> kill_time_;
-    long explosion_duration = 100; //milliseconds
+    long explosion_duration_ = 100; //milliseconds
     bool exploding_ = false;
 
 };

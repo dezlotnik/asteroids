@@ -1,7 +1,7 @@
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
-#include "game_object.h"
+#include "ship.h"
 #include "laser.h"
 #include <vector>
 #include <string>

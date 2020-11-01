@@ -22,9 +22,7 @@ class Game {
  private:
   SpaceShip spaceship;
   std::vector<std::shared_ptr<Asteroid>> asteroids;
-  std::vector<std::shared_ptr<Laser>> lasers;
   std::vector<std::shared_ptr<Enemy>> enemies;
-  std::vector<std::shared_ptr<Laser>> enemy_lasers;
 
   int score{0};
   std::size_t screen_width;

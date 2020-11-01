@@ -1,5 +1,5 @@
 #include "laser.h"
-#include "spaceship.h"
+#include "ship.h"
 
 Laser::Laser(const Ship &ship) {
 
@@ -28,7 +28,7 @@ void Laser::Update() {
 }
 
 void Laser::getFrontPoint(float &x, float &y) {
-    float x_f = getHeight()/2.0;
+    float x_f = getWidth()/2.0;
     float y_f = 0;
     float angle = pose_.yaw * 3.14/180.0;
     x = pose_.x + cos(angle)*x_f - sin(angle)*y_f;

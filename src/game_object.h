@@ -48,11 +48,4 @@ protected:
     bool alive_ = true;
 };
 
-class Ship : public GameObject {
-public:
-    std::string laser_image_name;
-    float laser_range;
-    float laser_speed;
-};
-
 #endif

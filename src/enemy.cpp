@@ -24,6 +24,7 @@ Enemy::Enemy() :
     laser_image_name = kLaserImageName;
     laser_range = 500;
     laser_speed = 5;
+    reload_distance = laser_range;
 
     int p = random_position(engine);
     float y;
@@ -64,9 +65,13 @@ void Enemy::Update(const SpaceShip &spaceship) {
 
     if (exploding_) {
       long time_since_explosion = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - kill_time_).count();
-      if (time_since_explosion >=  explosion_duration) {
-          alive_ = false;
+      if (time_since_explosion >=  explosion_duration_) {
+          render = false;
+          if (lasers.empty()) {
+              alive_ = false;
+          }
       }
+      updateLasers();
       return;
     }
 
@@ -82,4 +87,8 @@ void Enemy::Update(const SpaceShip &spaceship) {
     distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
 
     updatePose();
+
+    Fire();
+
+    updateLasers();
 }
