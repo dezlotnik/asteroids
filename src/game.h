@@ -18,6 +18,11 @@ class Game {
   void Run(Controller const &controller, Renderer &renderer,
            std::size_t target_frame_duration);
   int GetScore() const;
+  std::vector<std::vector<int>> loadLevels();
+  void setLevel(std::vector<int> level_config);
+  void getPoseFromSector(int sector,float &x,float &y);
+  int level = 0;
+  std::vector<std::vector<int>> level_configs;
 
  private:
   SpaceShip spaceship;

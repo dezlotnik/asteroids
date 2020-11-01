@@ -27,7 +27,7 @@ SpaceShip::SpaceShip() {
     thruster.setHeight(kThrusterHeight);
 
     laser_image_name = kLaserImageName;
-    laser_range = 500;
+    laser_range = 300;
     laser_speed = 10;
     reload_distance = 54; // laser width
 }

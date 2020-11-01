@@ -1,6 +1,9 @@
 #include "game.h"
 #include <iostream>
 #include <memory>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 #include "SDL.h"
 #include "collision_detection.h"
 
@@ -9,16 +12,72 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_height(screen_height) {
     spaceship.setPose(screen_width/2,screen_height/2,-90.0);
 
-    for (size_t i = 0; i < n_asteroids; i++)
-    {
-        asteroids.push_back(std::move(std::make_unique<Asteroid>()));
-    }
+    // for (size_t i = 0; i < n_asteroids; i++)
+    // {
+    //     asteroids.push_back(std::move(std::make_unique<Asteroid>()));
+    // }
 
-    for (size_t i = 0; i < n_enemies; i++)
-    {
-        enemies.push_back(std::move(std::make_unique<Enemy>()));
-    }
+    // for (size_t i = 0; i < n_enemies; i++)
+    // {
+    //     enemies.push_back(std::move(std::make_unique<Enemy>()));
+    // }
 
+}
+
+std::vector<std::vector<int>> Game::loadLevels() {
+  std::ifstream filestream("../data/levels.txt");
+  std::vector<std::vector<int>> level_configs;
+  std::string line, key, value;
+  if (filestream.is_open()) {
+    while (std::getline(filestream,line)) {;
+      std::istringstream linestream(line);
+      linestream >> key;
+      std::vector<int> level_config;
+      if (key == "Level") {
+        while (linestream >> value) {
+          level_config.push_back(std::stoi(value));
+        }
+        level_configs.push_back(level_config);
+      }
+    }
+  }
+  return level_configs;
+}
+
+void Game::getPoseFromSector(int sector,float &x,float &y) {
+  int sector_size = (2*kScreenWidth + 2*kScreenHeight)/16;
+  int p = sector*sector_size;
+  if (p >=0 && p <= kScreenWidth) {
+      y = 0.0;
+      x = static_cast<float>( p % kScreenWidth );
+  } else if (p > kScreenWidth && p <= (kScreenWidth + kScreenHeight)) {
+      x = kScreenWidth;
+      y = static_cast<float>( (p-kScreenWidth) % kScreenHeight );
+  } else if (p > (kScreenWidth + kScreenHeight) && p <= (2*kScreenWidth + kScreenHeight)) {
+      y = kScreenHeight;
+      x = static_cast<float>( (p - kScreenWidth - kScreenHeight) % kScreenWidth );
+  } else {
+      y = static_cast<float>( (p - 2*kScreenWidth - kScreenHeight) % kScreenHeight );
+      x = 0.0;
+  }
+}
+
+void Game::setLevel(std::vector<int> level_config) {
+  for (int sector = 0; sector < level_config.size(); sector++) {
+    if (level_config[sector] == 1) {
+      auto asteroid = std::make_unique<Asteroid>();
+      float x, y;
+      getPoseFromSector(sector,x,y);
+      asteroid->setPose(x,y,asteroid->getPose().yaw);
+      asteroids.push_back(std::move(asteroid));
+    } else if (level_config[sector] == 2) {
+      auto enemy = std::make_unique<Enemy>();
+      float x, y;
+      getPoseFromSector(sector,x,y);
+      enemy->setPose(x,y,enemy->getPose().yaw);
+      enemies.push_back(std::move(enemy));
+    }
+  }
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -30,8 +89,21 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   int frame_count = 0;
   bool running = true;
 
+  level_configs = loadLevels();
+
+  setLevel(level_configs[level]);
+
   while (running) {
     frame_start = SDL_GetTicks();
+    if (asteroids.empty() && enemies.empty()) {
+      level++;
+      if (level < level_configs.size()) {
+        setLevel(level_configs[level]);
+      }
+      else {
+        running = false;
+      }
+    }
 
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, spaceship);
@@ -47,7 +119,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(score, level+1, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -97,13 +169,6 @@ void Game::Update() {
     asteroids.push_back(std::move(new_asteroid));
   }
 
-  // respawn asteroids
-  if (asteroids.size() < n_asteroids) {
-    for (int i = 0; i < (n_asteroids - asteroids.size()); i++) {
-      asteroids.push_back(std::move(std::make_unique<Asteroid>()));
-    }
-  }
-
   // remove dead enemies
   if (!enemies.empty()) {
     auto it = enemies.begin();
@@ -114,13 +179,6 @@ void Game::Update() {
       } else {
         it = enemies.erase(it);
       }
-    }
-  }
-
-  // respawn enemies
-  if (enemies.size() < n_enemies) {
-    for (int i = 0; i < (n_enemies - enemies.size()); i++) {
-      enemies.push_back(std::move(std::make_unique<Enemy>()));
     }
   }
 

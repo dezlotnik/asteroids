@@ -1,0 +1,32 @@
+File for generating levels. Each level defines which game objects spawn
+in which sectors. There are 16 sectors that align along the perimeter
+of the game screen. 
+
+ ____ ____ ____ ____ ____
+|__1_|__2_|__3_|__4_|__5_|
+|_16_|			    |__6_|	
+|_15_|	  Player    |__7_|	
+|_14_|____ ____ ____|__8_|	
+|_13_|_12_|_11_|_10_|__9_|
+
+0 - Nothing
+1 - Asteroid
+2 - Enemy
+
+Levels
+Level 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+Level 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0
+Level 2 0 0 0 0 0 0 0 2 0 0 0 0 2 0 0
+Level 2 0 0 0 0 1 0 0 2 0 0 2 0 0 0 0
+Level 1 1 1 0 0 0 0 0 2 0 0 2 0 0 0 1
+Level 1 1 1 0 0 2 0 0 2 0 0 2 0 0 0 1
+Level 1 1 1 0 0 2 0 0 2 0 0 2 0 2 0 1
+Level 1 1 1 2 0 2 0 0 2 0 0 2 0 2 0 1
+Level 1 1 1 2 0 2 0 2 2 0 0 2 0 2 0 1
+Level 1 1 1 2 0 2 0 2 2 0 0 2 2 2 0 1
+Level 1 1 1 2 0 2 0 2 2 0 2 2 2 2 0 1
+Level 1 1 1 2 2 2 0 2 2 0 2 2 2 2 0 1
+Level 1 1 1 2 2 2 0 2 2 2 2 2 2 2 0 1
+Level 1 1 1 2 2 2 0 2 2 2 2 2 2 2 2 1
+Level 1 1 1 2 2 2 1 2 2 2 2 2 2 2 2 1
+
