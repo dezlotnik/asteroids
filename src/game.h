@@ -21,8 +21,8 @@ class Game {
 
  private:
   SpaceShip spaceship;
-  std::vector<std::shared_ptr<Asteroid>> asteroids;
-  std::vector<std::shared_ptr<Enemy>> enemies;
+  std::vector<std::unique_ptr<Asteroid>> asteroids;
+  std::vector<std::unique_ptr<Enemy>> enemies;
 
   int score{0};
   std::size_t screen_width;

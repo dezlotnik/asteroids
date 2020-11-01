@@ -11,12 +11,12 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
 
     for (size_t i = 0; i < n_asteroids; i++)
     {
-        asteroids.push_back(std::make_shared<Asteroid>());
+        asteroids.push_back(std::move(std::make_unique<Asteroid>()));
     }
 
     for (size_t i = 0; i < n_enemies; i++)
     {
-        enemies.push_back(std::make_shared<Enemy>());
+        enemies.push_back(std::move(std::make_unique<Enemy>()));
     }
 
 }
@@ -70,11 +70,11 @@ void Game::Update() {
   }
 
   // generate new asteroids
-  std::vector<std::shared_ptr<Asteroid>> new_asteroids;
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+  std::vector<std::unique_ptr<Asteroid>> new_asteroids;
+  for (std::unique_ptr<Asteroid> &asteroid : asteroids) {
     if (!asteroid->isAlive()) {
       for (int i = 0; i < asteroid->getNChildAsteroids(); i++) {
-        new_asteroids.push_back(std::make_shared<Asteroid>(*asteroid.get()));
+        new_asteroids.push_back(std::move(std::make_unique<Asteroid>(*asteroid.get())));
       }
     }
   }
@@ -83,7 +83,7 @@ void Game::Update() {
   if (!asteroids.empty()) {
     auto it = asteroids.begin();
     while (it != asteroids.end()) {
-      std::shared_ptr<Asteroid> &asteroid = *it;
+      std::unique_ptr<Asteroid> &asteroid = *it;
       if (asteroid->isAlive()) {
         ++it;
       } else {
@@ -93,14 +93,14 @@ void Game::Update() {
   }
 
   // add new asteroids
-  for (std::shared_ptr<Asteroid> new_asteroid : new_asteroids) {
-    asteroids.push_back(new_asteroid);
+  for (std::unique_ptr<Asteroid> &new_asteroid : new_asteroids) {
+    asteroids.push_back(std::move(new_asteroid));
   }
 
   // respawn asteroids
   if (asteroids.size() < n_asteroids) {
     for (int i = 0; i < (n_asteroids - asteroids.size()); i++) {
-      asteroids.push_back(std::make_shared<Asteroid>());
+      asteroids.push_back(std::move(std::make_unique<Asteroid>()));
     }
   }
 
@@ -108,7 +108,7 @@ void Game::Update() {
   if (!enemies.empty()) {
     auto it = enemies.begin();
     while (it != enemies.end()) {
-      std::shared_ptr<Enemy> &enemy = *it;
+      std::unique_ptr<Enemy> &enemy = *it;
       if (enemy->isAlive()) {
         ++it;
       } else {
@@ -120,26 +120,26 @@ void Game::Update() {
   // respawn enemies
   if (enemies.size() < n_enemies) {
     for (int i = 0; i < (n_enemies - enemies.size()); i++) {
-      enemies.push_back(std::make_shared<Enemy>());
+      enemies.push_back(std::move(std::make_unique<Enemy>()));
     }
   }
 
   // update asteroids
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+  for (std::unique_ptr<Asteroid> &asteroid : asteroids) {
     asteroid->Update();
   }
 
   // update enemies
-  for (std::shared_ptr<Enemy> enemy : enemies) {
+  for (std::unique_ptr<Enemy> &enemy : enemies) {
     enemy->Update(spaceship);
   }
 
   // check asteroid collisions
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+  for (std::unique_ptr<Asteroid> &asteroid : asteroids) {
     if (CollisionDetection::detect_collision(spaceship, *asteroid.get())) {
       spaceship.kill();
     }
-    for (std::shared_ptr<Enemy> enemy : enemies) {
+    for (std::unique_ptr<Enemy> &enemy : enemies) {
       if (CollisionDetection::detect_collision(*enemy.get(), *asteroid.get())) {
         enemy->kill();
       }
@@ -147,7 +147,7 @@ void Game::Update() {
   }
 
   // check collisions with enemies
-  for (std::shared_ptr<Enemy> enemy : enemies) {
+  for (std::unique_ptr<Enemy> &enemy : enemies) {
     if (CollisionDetection::detect_collision(spaceship, *enemy.get())) {
       spaceship.kill();
     }
@@ -155,8 +155,8 @@ void Game::Update() {
 
   // check enemy laser collisions
   // kill spaceship and laser if collision detected
-  for (std::shared_ptr<Enemy> enemy : enemies) {
-    for (std::shared_ptr<Laser> laser : enemy->lasers) {
+  for (std::unique_ptr<Enemy> &enemy : enemies) {
+    for (std::unique_ptr<Laser> &laser : enemy->lasers) {
       float x, y;
       laser->getFrontPoint(x,y);
       if (CollisionDetection::detect_point_collision(spaceship,x,y)) {
@@ -168,12 +168,12 @@ void Game::Update() {
 
   // check laser collisions
   // kill asteroid or enemy and laser if collision detected
-  for (std::shared_ptr<Laser> laser : spaceship.lasers) {
+  for (std::unique_ptr<Laser> &laser : spaceship.lasers) {
     float x, y;
     laser->getFrontPoint(x,y);
 
     // check asteroid collision
-    for (std::shared_ptr<Asteroid> asteroid : asteroids) {
+    for (std::unique_ptr<Asteroid> &asteroid : asteroids) {
       if (CollisionDetection::detect_point_collision(*asteroid.get(),x,y)) {
         laser->kill();
         asteroid->kill();
@@ -182,7 +182,7 @@ void Game::Update() {
     }
 
     // check enemy collision
-    for (std::shared_ptr<Enemy> enemy : enemies) {
+    for (std::unique_ptr<Enemy> &enemy : enemies) {
       if (CollisionDetection::detect_point_collision(*enemy.get(),x,y)) {
         laser->kill();
         enemy->kill();

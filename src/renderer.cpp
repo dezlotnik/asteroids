@@ -57,40 +57,42 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
     // SDL_RenderDrawRect(sdl_renderer,&destination);
 }
 
-void Renderer::Render(SpaceShip const &spaceship,
-                      std::vector<std::shared_ptr<Asteroid>> asteroids,
-                      std::vector<std::shared_ptr<Enemy>> enemies) {
+void Renderer::Render(const SpaceShip &spaceship,
+                      const std::vector<std::unique_ptr<Asteroid>> &asteroids,
+                      const std::vector<std::unique_ptr<Enemy>> &enemies) {
 
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
+
+  // Render asteroids
+  for (const std::unique_ptr<Asteroid> &asteroid : asteroids) {
+    RenderGameObject(asteroid.get());
+  }
 
   // Render thruster
   if (spaceship.thruster_state == SpaceShip::ThrusterState::kAccelerate && spaceship.isAlive()) {
     RenderGameObject(&(spaceship.thruster));
   }
 
-  // Render spaceship
-  RenderGameObject(&spaceship);
-  for (std::shared_ptr<Laser> laser: spaceship.lasers) {
+  // render lasers
+  for (const std::unique_ptr<Laser> &laser: spaceship.lasers) {
     RenderGameObject(laser.get());
   }
 
-  // Render asteroids
-  for (std::shared_ptr<Asteroid> asteroid : asteroids) {
-    RenderGameObject(asteroid.get());
-  }
+  // Render spaceship
+  RenderGameObject(&spaceship);
+  
 
   // Render enemies
-  for (std::shared_ptr<Enemy> enemy : enemies) {
+  for (const std::unique_ptr<Enemy> &enemy : enemies) {
+    for (const std::unique_ptr<Laser> &laser: enemy->lasers) {
+      RenderGameObject(laser.get());
+    }
     if (enemy->render) {
       RenderGameObject(enemy.get());
     }
-    for (std::shared_ptr<Laser> laser: enemy->lasers) {
-      RenderGameObject(laser.get());
-    }
   }
-
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

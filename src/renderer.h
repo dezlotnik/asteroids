@@ -13,9 +13,9 @@ class Renderer {
   Renderer(const std::size_t screen_width, const std::size_t screen_height);
   ~Renderer();
 
-  void Render(SpaceShip const &spaceship,
-              std::vector<std::shared_ptr<Asteroid>> asteroids,
-              std::vector<std::shared_ptr<Enemy>> enemies);
+  void Render(const SpaceShip &spaceship,
+              const std::vector<std::unique_ptr<Asteroid>> &asteroids,
+              const std::vector<std::unique_ptr<Enemy>> &enemies);
   void RenderGameObject(const GameObject *game_object);
   void UpdateWindowTitle(int score, int fps);
 

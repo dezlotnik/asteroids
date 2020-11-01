@@ -11,7 +11,7 @@ public:
     float laser_range;
     float laser_speed;
     float reload_distance;
-    std::vector<std::shared_ptr<Laser>> lasers;
+    std::vector<std::unique_ptr<Laser>> lasers;
     void Fire();
     void updateLasers();
 };
