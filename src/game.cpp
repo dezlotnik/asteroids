@@ -149,7 +149,9 @@ void Game::Update() {
   // check collisions with enemies
   for (std::unique_ptr<Enemy> &enemy : enemies) {
     if (CollisionDetection::detect_collision(spaceship, *enemy.get())) {
-      spaceship.kill();
+      if (enemy->render) {
+        spaceship.kill();
+      }
     }
   }
 
