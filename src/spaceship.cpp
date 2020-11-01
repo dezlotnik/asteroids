@@ -33,10 +33,10 @@ SpaceShip::SpaceShip() {
 }
 
 void SpaceShip::kill() {
-    alive_ = false;
-    setImageName(kExplosionImageName);
-    setWidth(kExplosionWidth);
-    setHeight(kExplosionHeight);
+    // alive_ = false;
+    // setImageName(kExplosionImageName);
+    // setWidth(kExplosionWidth);
+    // setHeight(kExplosionHeight);
 }
 
 void SpaceShip::Update() {
@@ -51,14 +51,12 @@ void SpaceShip::Update() {
 
   float vx = speed*cos(heading*3.14/180.0);
   float vy = speed*sin(heading*3.14/180.0);
+  float acceleration = 0.0;
 
   // set speed
   switch (thruster_state) {
     case ThrusterState::kAccelerate:
-      vx += acceleration_*cos(pose_.yaw*3.14/180.0);
-      vy += acceleration_*sin(pose_.yaw*3.14/180.0);
-      speed = sqrt(vx*vx + vy*vy);
-      heading = 180.0/3.14*atan2(vy,vx);
+      acceleration = acceleration_;
       break;
     case ThrusterState::kNone:
     default :
@@ -74,13 +72,12 @@ void SpaceShip::Update() {
       angular_velocity = 10.0;
       break;
     case RotateState::kNone:
-      angular_velocity = 0.0;
     default :
+        angular_velocity = 0.0;
       break;
   }
 
-  setVelocity(speed, heading, angular_velocity);
-  updatePose();
+  propagateState(acceleration, angular_velocity);
 
   // set thruster pose
   float x = -0.5*getWidth() - 0.5*thruster.getWidth();

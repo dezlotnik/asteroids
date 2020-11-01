@@ -14,6 +14,7 @@ public:
     std::vector<std::unique_ptr<Laser>> lasers;
     void Fire();
     void updateLasers();
+    void propagateState(float acceleration, float angular_velocity);
 };
 
 #endif

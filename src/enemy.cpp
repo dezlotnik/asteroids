@@ -78,15 +78,27 @@ void Enemy::Update(const SpaceShip &spaceship) {
     float yaw;
     float delta_x = spaceship.getPose().x - getPose().x;
     float delta_y = spaceship.getPose().y - getPose().y;
+
+    distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
     
     yaw = 180.0/3.14*atan2(delta_y,delta_x);
 
-    setPose(getPose().x,getPose().y,yaw);
-    setVelocity(speed_, yaw, 0.0);
+    float angular_velocity, accel;
+    angular_velocity = 1*(yaw - getPose().yaw);
+    if (angular_velocity > 10.0) {
+        angular_velocity = 10;
+    } else if (angular_velocity < -10.0) {
+        angular_velocity = -10;
+    }
+    accel = 0.1*(distanceToPlayer());
+    float speed = speed_ + accel;
 
-    distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
+    propagateState(accel,angular_velocity);
 
-    updatePose();
+    //setPose(getPose().x,getPose().y,yaw);
+    //setVelocity(speed, yaw, angular_velocity);
+
+    //updatePose();
 
     Fire();
 
