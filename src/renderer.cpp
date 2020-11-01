@@ -52,6 +52,7 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
     destination.h = game_object->getHeight();
     SDL_RendererFlip flip = SDL_FLIP_NONE;
     SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().yaw, NULL, flip );
+    SDL_DestroyTexture(texture);
 
     // SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
     // SDL_RenderDrawRect(sdl_renderer,&destination);
