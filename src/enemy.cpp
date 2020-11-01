@@ -3,12 +3,12 @@
 #include <math.h>
 #include <random>
 
-const float Enemy::kEnemyWidth = 42/1.5;
-const float Enemy::kEnemyHeight = 52/1.5;
+const float Enemy::kEnemyWidth = 42;
+const float Enemy::kEnemyHeight = 52;
 const std::string Enemy::kEnemyImageName = "../data/enemyRed2.png";
 
-const float Enemy::kExplosionWidth = 37/1.5;
-const float Enemy::kExplosionHeight = 38/1.5;
+const float Enemy::kExplosionWidth = 37;
+const float Enemy::kExplosionHeight = 38;
 const std::string Enemy::kExplosionImageName = "../data/laserRed10.png";
 
 const std::string Enemy::kLaserImageName = "../data/laserRed01.png";
@@ -86,7 +86,7 @@ void Enemy::Update(const SpaceShip &spaceship) {
 
     distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
 
-    updatePose();
+    //updatePose();
 
     Fire();
 

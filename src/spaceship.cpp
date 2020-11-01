@@ -3,18 +3,18 @@
 #include <iostream>
 
 const std::string SpaceShip::kSpaceShipImageName = "../data/playerShip3_blue.png";
-const float SpaceShip::kSpaceShipHeight = 49/1.5;
-const float SpaceShip::kSpaceShipWidth = 37/1.5;
+const float SpaceShip::kSpaceShipHeight = 49;
+const float SpaceShip::kSpaceShipWidth = 37;
 
 const std::string SpaceShip::kExplosionImageName = "../data/laserBlue10.png";
-const float SpaceShip::kExplosionWidth = 37/1.5;
-const float SpaceShip::kExplosionHeight = 37/1.5;
+const float SpaceShip::kExplosionWidth = 37;
+const float SpaceShip::kExplosionHeight = 37;
 
 const std::string SpaceShip::kLaserImageName = "../data/laserBlue01.png";
 
 const std::string SpaceShip::kThrusterImageName = "../data/fire00.png";
-const float SpaceShip::kThrusterWidth = 40/1.5;
-const float SpaceShip::kThrusterHeight = 16/1.5;
+const float SpaceShip::kThrusterWidth = 40;
+const float SpaceShip::kThrusterHeight = 16;
 
 SpaceShip::SpaceShip() {
 
@@ -33,10 +33,10 @@ SpaceShip::SpaceShip() {
 }
 
 void SpaceShip::kill() {
-    alive_ = false;
-    setImageName(kExplosionImageName);
-    setWidth(kExplosionWidth);
-    setHeight(kExplosionHeight);
+    // alive_ = false;
+    // setImageName(kExplosionImageName);
+    // setWidth(kExplosionWidth);
+    // setHeight(kExplosionHeight);
 }
 
 void SpaceShip::Update() {

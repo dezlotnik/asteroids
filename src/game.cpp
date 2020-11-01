@@ -45,21 +45,25 @@ std::vector<std::vector<int>> Game::loadLevels() {
 }
 
 void Game::getPoseFromSector(int sector,float &x,float &y) {
-  int sector_size = (2*kScreenWidth + 2*kScreenHeight)/16;
-  int p = sector*sector_size;
-  if (p >=0 && p <= kScreenWidth) {
-      y = 0.0;
-      x = static_cast<float>( p % kScreenWidth );
-  } else if (p > kScreenWidth && p <= (kScreenWidth + kScreenHeight)) {
-      x = kScreenWidth;
-      y = static_cast<float>( (p-kScreenWidth) % kScreenHeight );
-  } else if (p > (kScreenWidth + kScreenHeight) && p <= (2*kScreenWidth + kScreenHeight)) {
-      y = kScreenHeight;
-      x = static_cast<float>( (p - kScreenWidth - kScreenHeight) % kScreenWidth );
-  } else {
-      y = static_cast<float>( (p - 2*kScreenWidth - kScreenHeight) % kScreenHeight );
-      x = 0.0;
-  }
+  //int sector_size = (2*kScreenWidth + 2*kScreenHeight)/16;
+  int sector_width = kScreenWidth/5;
+  int sector_height = kScreenHeight/5;
+  x = static_cast<float>( (sector % 5)*sector_width ) + sector_width/2.0;
+  y = static_cast<float>( (sector/5)*sector_height ) + sector_height/2.0;
+  // int p = sector*sector_size;
+  // if (p >=0 && p <= kScreenWidth) {
+  //     y = 0.0;
+  //     x = static_cast<float>( p % kScreenWidth );
+  // } else if (p > kScreenWidth && p <= (kScreenWidth + kScreenHeight)) {
+  //     x = kScreenWidth;
+  //     y = static_cast<float>( (p-kScreenWidth) % kScreenHeight );
+  // } else if (p > (kScreenWidth + kScreenHeight) && p <= (2*kScreenWidth + kScreenHeight)) {
+  //     y = kScreenHeight;
+  //     x = static_cast<float>( (p - kScreenWidth - kScreenHeight) % kScreenWidth );
+  // } else {
+  //     y = static_cast<float>( (p - 2*kScreenWidth - kScreenHeight) % kScreenHeight );
+  //     x = 0.0;
+  // }
 }
 
 void Game::setLevel(std::vector<int> level_config) {
