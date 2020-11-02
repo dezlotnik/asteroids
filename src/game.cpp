@@ -95,7 +95,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
   while (running) {
     frame_start = SDL_GetTicks();
-    if (asteroids.empty() && enemies.empty()) {
+    if (enemies.empty()) {
       level++;
       if (level < level_configs.size()) {
         setLevel(level_configs[level]);

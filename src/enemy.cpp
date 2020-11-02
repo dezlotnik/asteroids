@@ -23,7 +23,7 @@ Enemy::Enemy() :
 
     laser_image_name = kLaserImageName;
     laser_range = 500;
-    laser_speed = 5;
+    laser_speed = 8;
     reload_distance = laser_range;
 
     int p = random_position(engine);

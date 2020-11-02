@@ -33,10 +33,10 @@ SpaceShip::SpaceShip() {
 }
 
 void SpaceShip::kill() {
-    // alive_ = false;
-    // setImageName(kExplosionImageName);
-    // setWidth(kExplosionWidth);
-    // setHeight(kExplosionHeight);
+    alive_ = false;
+    setImageName(kExplosionImageName);
+    setWidth(kExplosionWidth);
+    setHeight(kExplosionHeight);
 }
 
 void SpaceShip::Update() {
