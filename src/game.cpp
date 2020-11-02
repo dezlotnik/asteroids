@@ -94,16 +94,32 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   level_configs = loadLevels();
   if (!level_configs.empty()) {
     setLevel(level_configs[level]);
+  } else {
+    std::cout<<"Prebuilt levels not found!"<<"\n";
+    std::cout<<"Generating random level..."<<"\n";
+    for (int i = 0; i < n_asteroids; i++) {
+      asteroids.push_back(std::make_unique<Asteroid>());
+    }
+    for (int i = 0; i < n_enemies; i++) {
+      enemies.push_back(std::make_unique<Enemy>());
+    }
   }
 
   while (running) {
     frame_start = SDL_GetTicks();
     if (enemies.empty()) {
       level++;
-      if ( !level_configs.empty() && level < level_configs.size()) {
+      if (level_configs.empty()) {
+        // generate random level
+        for (int i = 0; i < n_asteroids; i++) {
+          asteroids.push_back(std::make_unique<Asteroid>());
+        }
+        for (int i = 0; i < n_enemies; i++) {
+          enemies.push_back(std::make_unique<Enemy>());
+        }
+      } else if (level < level_configs.size()) {
         setLevel(level_configs[level]);
-      }
-      else {
+      } else {
         running = false;
       }
     }
