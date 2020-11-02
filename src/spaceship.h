@@ -23,6 +23,10 @@ public:
     static const float kThrusterHeight;
     static const std::string kThrusterImageName;
 
+    static const float kLaserRange;
+    static const float kLaserSpeed;
+    static const float kLaserReloadDistance;
+
     SpaceShip();
     void Update();
     float getMaximumSpeed() override {return maximum_speed_;}
@@ -36,7 +40,7 @@ public:
 
 private:
     float maximum_speed_ = 5.0;
-    float acceleration_ = 0.25;
+    float acceleration_ = 0.5;
 };
 
 #endif

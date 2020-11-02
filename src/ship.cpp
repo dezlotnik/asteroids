@@ -5,7 +5,7 @@
 void Ship::Fire() {
     if (lasers.empty()) {
         lasers.push_back(std::make_unique<Laser>((*this)));
-    } else if (lasers.back()->getDistance() > reload_distance) {
+    } else if (lasers.back()->getDistance() > reload_distance_) {
         lasers.push_back(std::make_unique<Laser>(*this));
     }
 }

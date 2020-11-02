@@ -26,7 +26,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
 
 std::vector<std::vector<int>> Game::loadLevels() {
   std::ifstream filestream("../data/levels.txt");
-  std::vector<std::vector<int>> level_configs;
+  std::vector<std::vector<int>> level_configs = {};
   std::string line, key, value;
   if (filestream.is_open()) {
     while (std::getline(filestream,line)) {;
@@ -40,6 +40,8 @@ std::vector<std::vector<int>> Game::loadLevels() {
         level_configs.push_back(level_config);
       }
     }
+  } else {
+    std::cout << "Could not find levels file!" << "\n";
   }
   return level_configs;
 }
@@ -90,14 +92,15 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   bool running = true;
 
   level_configs = loadLevels();
-
-  setLevel(level_configs[level]);
+  if (!level_configs.empty()) {
+    setLevel(level_configs[level]);
+  }
 
   while (running) {
     frame_start = SDL_GetTicks();
     if (enemies.empty()) {
       level++;
-      if (level < level_configs.size()) {
+      if ( !level_configs.empty() && level < level_configs.size()) {
         setLevel(level_configs[level]);
       }
       else {
@@ -200,6 +203,7 @@ void Game::Update() {
     for (std::unique_ptr<Enemy> &enemy : enemies) {
       if (CollisionDetection::detect_collision(*enemy.get(), *asteroid.get())) {
         enemy->kill();
+        asteroid->kill();
       }
     }
   }
@@ -222,6 +226,13 @@ void Game::Update() {
       if (CollisionDetection::detect_point_collision(spaceship,x,y)) {
         laser->kill();
         spaceship.kill();
+      }
+
+      for (std::unique_ptr<Asteroid> &asteroid : asteroids) {
+        if (CollisionDetection::detect_point_collision(*asteroid.get(),x,y)) {
+          laser->kill();
+          asteroid->kill();
+        }
       }
     }
   }

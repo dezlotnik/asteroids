@@ -3,12 +3,12 @@
 
 Laser::Laser(const Ship &ship) {
 
-    setImageName(ship.laser_image_name);
+    setImageName(ship.getLaserImageName());
     setWidth(54);
     setHeight(9);
 
-    laser_speed_ = ship.laser_speed;
-    range_ = ship.laser_range;
+    laser_speed_ = ship.getLaserSpeed();
+    range_ = ship.getLaserRange();
 
     // set laser pose
     float x = 0.5*ship.getHeight();

@@ -13,6 +13,9 @@ const std::string Enemy::kExplosionImageName = "../data/laserRed10.png";
 
 const std::string Enemy::kLaserImageName = "../data/laserRed01.png";
 
+const float Enemy::kLaserRange = 300;
+const float Enemy::kLaserSpeed = 10;
+
 Enemy::Enemy() : 
     engine(dev()),
     random_position(0,  2*kScreenWidth + 2*kScreenHeight)
@@ -21,10 +24,10 @@ Enemy::Enemy() :
     setWidth(kEnemyWidth);
     setHeight(kEnemyHeight);
 
-    laser_image_name = kLaserImageName;
-    laser_range = 500;
-    laser_speed = 8;
-    reload_distance = laser_range;
+    laser_image_name_ = kLaserImageName;
+    laser_range_ = kLaserRange;
+    laser_speed_ = kLaserSpeed;
+    reload_distance_ = laser_range_;
 
     int p = random_position(engine);
     float y;
@@ -99,12 +102,9 @@ void Enemy::Update(const SpaceShip &spaceship) {
 
     propagateState(acceleration,angular_velocity);
 
-    //setPose(getPose().x,getPose().y,yaw);
-    //setVelocity(speed, yaw, angular_velocity);
-
-    //updatePose();
-
-    Fire();
+    if (distanceToPlayer() <= laser_range_) {
+        Fire();
+    }
 
     updateLasers();
 }

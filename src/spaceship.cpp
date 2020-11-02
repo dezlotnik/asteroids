@@ -16,6 +16,10 @@ const std::string SpaceShip::kThrusterImageName = "../data/fire00.png";
 const float SpaceShip::kThrusterWidth = 40/1.5;
 const float SpaceShip::kThrusterHeight = 16/1.5;
 
+const float SpaceShip::kLaserRange = 300;
+const float SpaceShip::kLaserSpeed = 10;
+const float SpaceShip::kLaserReloadDistance = 54; // laser width
+
 SpaceShip::SpaceShip() {
 
     setImageName(kSpaceShipImageName);
@@ -26,10 +30,10 @@ SpaceShip::SpaceShip() {
     thruster.setWidth(kThrusterWidth);
     thruster.setHeight(kThrusterHeight);
 
-    laser_image_name = kLaserImageName;
-    laser_range = 300;
-    laser_speed = 10;
-    reload_distance = 54; // laser width
+    laser_image_name_ = kLaserImageName;
+    laser_range_ = kLaserRange;
+    laser_speed_ = kLaserSpeed;
+    reload_distance_ = kLaserReloadDistance;
 }
 
 void SpaceShip::kill() {

@@ -18,6 +18,8 @@ public:
     static const std::string kExplosionImageName;
 
     static const std::string kLaserImageName;
+    static const float kLaserRange;
+    static const float kLaserSpeed;
 
     Enemy();
     void Update(const SpaceShip &spaceship);
