@@ -5,9 +5,9 @@
 
 using namespace AsteroidConstants;
 
-std::tuple<std::string, int, int> METIOR_1 = {"../data/meteorBrown_big1.png", 101, 85};
-std::tuple<std::string, int, int> METIOR_2 = {"../data/meteorBrown_med1.png", 43, 43};
-std::tuple<std::string, int, int> METIOR_3 = {"../data/meteorBrown_small1.png", 28, 28};
+std::tuple<std::string, int, int> METIOR_1{"../data/meteorBrown_big1.png", 101, 85};
+std::tuple<std::string, int, int> METIOR_2{"../data/meteorBrown_med1.png", 43, 43};
+std::tuple<std::string, int, int> METIOR_3{"../data/meteorBrown_small1.png", 28, 28};
 
 Asteroid::Asteroid() :
     engine(dev()),
