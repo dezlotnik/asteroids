@@ -2,31 +2,27 @@
 #include "spaceship.h"
 #include <math.h>
 #include <random>
-
-const float Enemy::kEnemyWidth = 42/1.5;
-const float Enemy::kEnemyHeight = 52/1.5;
-const std::string Enemy::kEnemyImageName = "../data/enemyRed2.png";
-
-const float Enemy::kExplosionWidth = 37/1.5;
-const float Enemy::kExplosionHeight = 38/1.5;
-const std::string Enemy::kExplosionImageName = "../data/laserRed10.png";
-
-const std::string Enemy::kLaserImageName = "../data/laserRed01.png";
-
-const float Enemy::kLaserRange = 300;
-const float Enemy::kLaserSpeed = 10;
+#include <iostream>
 
 Enemy::Enemy() : 
     engine(dev()),
     random_position(0,  2*kScreenWidth + 2*kScreenHeight)
 {
-    setImageName(kEnemyImageName);
-    setWidth(kEnemyWidth);
-    setHeight(kEnemyHeight);
+    spaceship_image_name_ = "../data/enemyRed2.png";
+    spaceship_image_width_ = 42/1.5;
+    spaceship_image_height_ = 52/1.5;
 
-    laser_image_name_ = kLaserImageName;
-    laser_range_ = kLaserRange;
-    laser_speed_ = kLaserSpeed;
+    explosion_image_name_ = "../data/laserRed10.png";
+    explosion_image_width_ = 37/1.5;
+    explosion_image_height_ = 38/1.5;
+
+    setImageName(spaceship_image_name_);
+    setWidth(spaceship_image_width_);
+    setHeight(spaceship_image_height_);
+
+    laser_image_name_ = "../data/laserRed01.png";
+    laser_range_ = 300;
+    laser_speed_ = 5;
     reload_distance_ = laser_range_;
 
     int p = random_position(engine);
@@ -51,60 +47,37 @@ Enemy::Enemy() :
     maximum_speed_ = random_speed(engine);
 
     setPose(x,y,0);
+
+    lives_ = 1;
 }
 
-void Enemy::kill() {
-    setImageName(kExplosionImageName);
-    setWidth(kExplosionWidth);
-    setHeight(kExplosionHeight);
-    kill_time_ = std::chrono::system_clock::now();
-    exploding_ = true;
-}
 
 void Enemy::controller(float yaw_error, float &acceleration, float &angular_velocity) {
-    angular_velocity = 1*(yaw_error);
-    if (angular_velocity > 10.0) {
-        angular_velocity = 10;
-    } else if (angular_velocity < -10.0) {
-        angular_velocity = -10;
-    }
+    angular_velocity = yaw_error;
     acceleration = 0.25;
 }
 
 void Enemy::Update(const SpaceShip &spaceship) {
-    if (!isAlive()) {
-        return;
+    manageStates();
+
+    if (state_ == State::kAlive) {
+        float yaw;
+        float delta_x = spaceship.getPose().x - getPose().x;
+        float delta_y = spaceship.getPose().y - getPose().y;
+
+        distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
+        
+        yaw = 180.0/3.14*atan2(delta_y,delta_x);
+
+        float angular_velocity, acceleration;
+        float yaw_error = yaw - getPose().yaw;
+        controller(yaw_error, acceleration, angular_velocity);
+
+        propagateState(acceleration,angular_velocity);
+
+        if (distanceToPlayer() <= laser_range_) {
+            Fire();
+        }
     }
-
-    if (exploding_) {
-      long time_since_explosion = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - kill_time_).count();
-      if (time_since_explosion >=  explosion_duration_) {
-          render = false;
-          if (lasers.empty()) {
-              alive_ = false;
-          }
-      }
-      updateLasers();
-      return;
-    }
-
-    float yaw;
-    float delta_x = spaceship.getPose().x - getPose().x;
-    float delta_y = spaceship.getPose().y - getPose().y;
-
-    distance_to_player_ = sqrt(delta_x*delta_x + delta_y*delta_y);
-    
-    yaw = 180.0/3.14*atan2(delta_y,delta_x);
-
-    float angular_velocity, acceleration;
-    float yaw_error = 1*(yaw - getPose().yaw);
-    controller(yaw_error, acceleration, angular_velocity);
-
-    propagateState(acceleration,angular_velocity);
-
-    if (distanceToPlayer() <= laser_range_) {
-        Fire();
-    }
-
     updateLasers();
 }

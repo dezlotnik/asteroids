@@ -40,6 +40,7 @@ public:
 protected:
     float maximum_speed_ = 10.0;
     float minimum_speed_ = 0.0;
+    float maximum_angular_velocity_ = 0.0;
     Pose pose_;
     Velocity velocity_;
     std::string image_name_;

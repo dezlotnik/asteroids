@@ -99,7 +99,7 @@ void Renderer::Render(const SpaceShip &spaceship,
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::UpdateWindowTitle(int score, int level, int fps) {
-  std::string title{"Asteroids! Score: " + std::to_string(score) + " Level: " + std::to_string(level) + " FPS: " + std::to_string(fps)};
+void Renderer::UpdateWindowTitle(int score, int level, int lives, int fps) {
+  std::string title{"Asteroids! Lives: " + std::to_string(lives) + " Score: " + std::to_string(score) + " Level: " + std::to_string(level) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

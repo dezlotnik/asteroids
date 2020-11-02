@@ -17,7 +17,7 @@ class Renderer {
               const std::vector<std::unique_ptr<Asteroid>> &asteroids,
               const std::vector<std::unique_ptr<Enemy>> &enemies);
   void RenderGameObject(const GameObject *game_object);
-  void UpdateWindowTitle(int score, int level, int fps);
+  void UpdateWindowTitle(int score, int level, int lives, int fps);
 
  private:
   SDL_Window *sdl_window;

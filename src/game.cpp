@@ -11,17 +11,6 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_width(screen_width),
       screen_height(screen_height) {
     spaceship.setPose(screen_width/2,screen_height/2,-90.0);
-
-    // for (size_t i = 0; i < n_asteroids; i++)
-    // {
-    //     asteroids.push_back(std::move(std::make_unique<Asteroid>()));
-    // }
-
-    // for (size_t i = 0; i < n_enemies; i++)
-    // {
-    //     enemies.push_back(std::move(std::make_unique<Enemy>()));
-    // }
-
 }
 
 std::vector<std::vector<int>> Game::loadLevels() {
@@ -138,7 +127,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, level+1, frame_count);
+      renderer.UpdateWindowTitle(score, level+1, spaceship.getLives(), frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
