@@ -3,6 +3,7 @@
 
 #include "game_object.h"
 #include <chrono>
+#include <memory>
 
 class Laser;
 
