@@ -47,8 +47,8 @@ Enemy::Enemy() :
         x = 0.0;
     }
 
-    std::uniform_real_distribution<float> random_speed(minimum_speed_, maximum_speed_);
-    speed_ = random_speed(engine);
+    std::uniform_real_distribution<float> random_speed(speed_range_min_, speed_range_max_);
+    maximum_speed_ = random_speed(engine);
 
     setPose(x,y,0);
 }

@@ -34,10 +34,8 @@ private:
     std::random_device dev;
     std::mt19937 engine;
     std::uniform_int_distribution<int> random_position;
-
-    float maximum_speed_ = 5.0;
-    float minimum_speed_ = 0.0;
-    float speed_;
+    float speed_range_max_ = 5.0;
+    float speed_range_min_ = 4.0;
     float distance_to_player_ = 0.0;
     int counter_ = 0;
     std::chrono::time_point<std::chrono::system_clock> kill_time_;
