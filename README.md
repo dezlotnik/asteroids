@@ -3,7 +3,7 @@
 A SDL game based on the classic Asteroids arcade game. Completed as part of
 Udacity's C++ Nanodegree Program.
 
-<img src="snake_game.gif"/>
+<img src="asteroids.gif"/>
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
