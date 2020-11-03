@@ -72,4 +72,34 @@ Credit [Kenney](https://kenney.nl) for game artwork.
   * Defines constants used throughout the program.
 
 ## Capstone Project Rubric
-
+* The project demonstrates an understanding of C++ functions and control structures.
+  * Used throughout the program. 
+* The project reads data from a file and process the data, or the program writes data to a file.
+  * Levels are loaded from the `data/levels.txt` file in `game.cpp` line `16`.
+* The project uses Object Oriented Programming techniques.
+  * Used throughout the program. For example, `ship.cpp/h`. 
+* Class constructors utilize member initialization lists.
+  * Initialization lists are used when appropriate. See for example 
+  `asteroids.cpp` line `12`.
+* Classes encapsulate behavior.
+  * The `GameObject` class encapsulates data and functions associated with 
+  game objects. For example, the position and orientation of a game object is 
+  stored in the `pose_` member variable of `GameObject`. Pose data is manipulated
+  in the `setPose` method of `GameObject`. The pose is updated based on the
+  object velocity via the `updatePose` method.
+  * Invariants are used in the `setVelocity` method of `GameObject` in `game_object.cpp` line `12`.
+* Classes follow an appropriate inheritance hierarchy.
+  * `SpaceShip` and `Enemy` inherit from `Ship`, which inherits from `GameObject`.
+  * Composition is used. The `SpaceShip` class has a member `lasers` which is 
+  a vector of `Laser` unique pointers.
+  * Override functions are specified. See `ship.h` line `28`.
+* Derived class functions override virtual base class functions.
+  * See `ship.h` line `28`.
+* The project makes use of references in function declarations.
+  * See `renderer.h` line `16`.
+  * See `collision_detection.h` line `8`.
+* The project uses smart pointers instead of raw pointers.
+  * Enemy and asteroid objects are stored in a vector of unique pointers in
+  `game.h` lines `29` and `30`.
+  * Spaceship lasers are stored as a vector of unique pointers in `ship.h` line
+  `12`.
