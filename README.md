@@ -1,14 +1,16 @@
 # ASTEROIDS!
 
 An SDL game based on the classic Asteroids arcade game. Defeat enemy spaceships
-and blast away dangerous asteroids. 
+and blast away dangerous asteroids to advance to the next level. Levels are
+defined in `data/levels.txt`.
 
 * Press <kbd>SPACE</kbd> to fire lasers.
 * Press <kbd>↑</kbd> to accelerate.
 * Press <kbd>←</kbd> to turn left.
 * Press <kbd>→</kbd> to turn right.
 
-Completed as part of Udacity's C++ Nanodegree Program.
+Completed as the capstone project of Udacity's C++ Nanodegree Program. Capstone
+option 2 was chosen for this project.
 
 Credit [Kenney](https://kenney.nl) for game artwork.
 
