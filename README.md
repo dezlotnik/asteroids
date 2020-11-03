@@ -1,7 +1,14 @@
 # ASTEROIDS!
 
-An SDL game based on the classic Asteroids arcade game. Completed as part of
-Udacity's C++ Nanodegree Program.
+An SDL game based on the classic Asteroids arcade game. Defeat enemy spaceships
+and blast away dangerous asteroids. 
+
+* Press <kbd>SPACE</kbd> to fire lasers.
+* Press <kbd>↑</kbd> to accelerate.
+* Press <kbd>←</kbd> to turn left.
+* Press <kbd>→</kbd> to turn right.
+
+Completed as part of Udacity's C++ Nanodegree Program.
 
 Credit [Kenney](https://kenney.nl) for game artwork.
 
@@ -33,6 +40,36 @@ Credit [Kenney](https://kenney.nl) for game artwork.
 4. Run it: `./Asteroids`.
 
 ## File and Class Structure
+* `main.cpp`
+  * Starts the game loop.
+* `game.cpp/h`
+  * Definition of the `Game` class that updates the game state.
+* `renderer.cpp/h`
+  * Definition of the `Renderer` class that renders game objects to the screen.
+* `controller.cpp/h`
+  * Definition of the `Controller` class that handles keyboard inputs.
+* `game_object.cpp/h`
+  * Definition of the `GameObject` base class that encapsulates data for objects
+  that interact with the game loop and are rendered to the screen.
+* `asteroids.cpp/h`
+  * Definition of the `Asteroid` class derived from `GameObject` that defines the 
+  behavior of asteroids. 
+* `ship.cpp/h`
+  * Definition of the `Ship` class derived from `GameObject` that defines the
+  behavior of spaceships.
+* `spacecraft.cpp/h`
+  * Definition of the `Spacecraft` class derived from `Ship` that defines the
+  behavior of the player spaceship.
+* `enemy.cpp/h`
+  * Definition of the `Enemy` class derived from `Ship` that defines the
+  behavior of the enemy spaceships.
+* `laser.cpp/h`
+  * Definition of the `Laser` class derived from `GameObject` that defines the
+  behavior of the lasers that are fired from spaceships.
+* `collision_detection.cpp/h`
+  * Helper functions for detecting collisions between game objects.
+* `asteroid_constants.h`
+  * Defines constants used throughout the program.
 
 ## Capstone Project Rubric
 
