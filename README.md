@@ -1,7 +1,9 @@
 # ASTEROIDS!
 
-A SDL game based on the classic Asteroids arcade game. Completed as part of
+An SDL game based on the classic Asteroids arcade game. Completed as part of
 Udacity's C++ Nanodegree Program.
+
+Credit [Kenney](www.kenney.nl) for game artwork.
 
 <img src="asteroids.gif"/>
 
