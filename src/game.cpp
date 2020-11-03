@@ -96,7 +96,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
   while (running) {
     frame_start = SDL_GetTicks();
-    if (enemies.empty()) {
+    if (enemies.empty() && asteroids.empty()) {
       level++;
       if (level_configs.empty()) {
         // generate random level
