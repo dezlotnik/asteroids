@@ -40,15 +40,16 @@ void Game::getPoseFromSector(int sector,float &x,float &y) {
   int p = sector*sector_size;
   if (p >=0 && p <= kScreenWidth) {
     y = 0.0;
-    x = static_cast<float>( p % kScreenWidth );
+    x = static_cast<float>(p % kScreenWidth);
   } else if (p > kScreenWidth && p <= (kScreenWidth + kScreenHeight)) {
     x = kScreenWidth;
-    y = static_cast<float>( (p-kScreenWidth) % kScreenHeight );
+    y = static_cast<float>((p - kScreenWidth) % kScreenHeight);
   } else if (p > (kScreenWidth + kScreenHeight) && p <= (2*kScreenWidth + kScreenHeight)) {
     y = kScreenHeight;
-    x = static_cast<float>( (p - kScreenWidth - kScreenHeight) % kScreenWidth );
+    x = static_cast<float>((p - kScreenWidth - kScreenHeight) % kScreenWidth);
   } else {
-    y = static_cast<float>( (p - 2*kScreenWidth - kScreenHeight) % kScreenHeight );
+    y = static_cast<float>((p - 2 * kScreenWidth - kScreenHeight) %
+                           kScreenHeight);
     x = 0.0;
   }
 }

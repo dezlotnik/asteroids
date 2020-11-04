@@ -10,9 +10,10 @@ class Laser : public GameObject {
 public:
   Laser(const Ship &ship);
   void Update();
-  float getDistance() {return distance_;}
-  float getRange() {return range_;}
+  float getDistance() { return distance_; }
+  float getRange() { return range_; }
   void getFrontPoint(float &x, float &y);
+
 private:
   float laser_speed_;
   float range_;

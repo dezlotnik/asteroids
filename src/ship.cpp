@@ -54,9 +54,9 @@ void Ship::explode() {
   long time_since_explosion = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - kill_time_).count();
   if (time_since_explosion >=  explosion_duration_) {
     if (lives_ > 0) {
-      respawn_time_ =  std::chrono::system_clock::now();
-      setPose(kScreenWidth/2,kScreenHeight/2,-90.0);
-      setVelocity(0,0,0);
+      respawn_time_ = std::chrono::system_clock::now();
+      setPose(kScreenWidth / 2, kScreenHeight / 2, -90.0);
+      setVelocity(0, 0, 0);
       setImageName(respawn_image_name_);
       setWidth(spaceship_image_width_);
       setHeight(spaceship_image_height_);
@@ -80,15 +80,15 @@ void Ship::respawn() {
 
 void Ship::manageStates() {
   switch (state_) {
-    case State::kAlive :
-      break;
-    case State::kExploding :
-      explode();
-      break;
-    case State::kRespawn :
-      respawn();
-      break;
-    default :
-      break;
+  case State::kAlive:
+    break;
+  case State::kExploding:
+    explode();
+    break;
+  case State::kRespawn:
+    respawn();
+    break;
+  default:
+    break;
   }
 }
