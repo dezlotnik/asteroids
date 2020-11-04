@@ -40,22 +40,27 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::RenderGameObject(const GameObject *game_object) {
-    SDL_Surface* surface = IMG_Load((game_object->getImageName()).c_str()); 
-    // printf("IMG_Load: %s\n", IMG_GetError());
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
-    SDL_FreeSurface(surface);
-    SDL_Rect destination;
-    destination.x = static_cast<int>(game_object->getPose().x - game_object->getWidth()/2);
-    destination.y = static_cast<int>(game_object->getPose().y - game_object->getHeight()/2);
-    destination.w = game_object->getWidth();
-    destination.h = game_object->getHeight();
-    SDL_RendererFlip flip = SDL_FLIP_NONE;
-    SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().yaw, NULL, flip );
-    SDL_DestroyTexture(texture);
+void Renderer::RenderGameObject(const GameObject *game_object, bool render_bounding_box) {
+  SDL_Surface* surface = IMG_Load((game_object->getImageName()).c_str()); 
+  if (nullptr == surface) {
+    std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
+  }
+  
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(sdl_renderer, surface); 
+  SDL_FreeSurface(surface);
+  SDL_Rect destination;
+  destination.x = static_cast<int>(game_object->getPose().x - game_object->getWidth()/2);
+  destination.y = static_cast<int>(game_object->getPose().y - game_object->getHeight()/2);
+  destination.w = game_object->getWidth();
+  destination.h = game_object->getHeight();
+  SDL_RendererFlip flip = SDL_FLIP_NONE;
+  SDL_RenderCopyEx(sdl_renderer, texture, NULL, &destination, game_object->getPose().yaw, NULL, flip );
+  SDL_DestroyTexture(texture);
 
-    // SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-    // SDL_RenderDrawRect(sdl_renderer,&destination);
+  if (render_bounding_box) {
+    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    SDL_RenderDrawRect(sdl_renderer,&destination);
+  }
 }
 
 void Renderer::Render(const SpaceShip &spaceship,

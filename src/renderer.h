@@ -16,7 +16,7 @@ class Renderer {
   void Render(const SpaceShip &spaceship,
               const std::vector<std::unique_ptr<Asteroid>> &asteroids,
               const std::vector<std::unique_ptr<Enemy>> &enemies);
-  void RenderGameObject(const GameObject *game_object);
+  void RenderGameObject(const GameObject *game_object, bool render_bounding_box = false);
   void UpdateWindowTitle(int score, int level, int lives, int fps);
 
  private:
