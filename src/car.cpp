@@ -48,15 +48,17 @@ void Car::updatePose() {
   float lr = 46.0;
   float L = 98.0;
 
-  // Slip angle beta at the geometric center
-  float beta = atan((lr / L) * tan(steering_angle));
-  
-  float dx = speed * cos(yaw_rad + beta);
-  float dy = speed * sin(yaw_rad + beta);
-  
-  // dyaw_rad = (V / L) * cos(beta) * tan(delta)
-  float dyaw_rad = (speed / L) * cos(beta) * tan(steering_angle);
+  // 1. Calculate rotation rate
+  // dPsi = (V / L) * tan(delta)
+  float dyaw_rad = (speed / L) * tan(steering_angle);
 
+  // 2. Calculate velocity of the geometric center
+  // The rear axle moves exactly in the direction of yaw.
+  // The center also has a component from the rotation.
+  float dx = speed * cos(yaw_rad) - (dyaw_rad * lr * sin(yaw_rad));
+  float dy = speed * sin(yaw_rad) + (dyaw_rad * lr * cos(yaw_rad));
+
+  // 3. Apply movement
   pose_.x += dx;
   pose_.y += dy;
   pose_.yaw += dyaw_rad * 180.0 / 3.14159;
