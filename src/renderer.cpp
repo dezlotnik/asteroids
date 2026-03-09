@@ -66,6 +66,15 @@ void Renderer::DrawCircle(int centerX, int centerY, int radius) {
   }
 }
 
+void Renderer::RenderPolygon(const std::vector<GameObject::Point>& corners, SDL_Color color) {
+  SDL_SetRenderDrawColor(sdl_renderer, color.r, color.g, color.b, color.a);
+  for (size_t i = 0; i < corners.size(); i++) {
+    const auto& p1 = corners[i];
+    const auto& p2 = corners[(i + 1) % corners.size()];
+    SDL_RenderDrawLine(sdl_renderer, (int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
+  }
+}
+
 void Renderer::RenderTurningCircles(const Car &car) {
   if (std::abs(car.steering_angle) < 0.001) return;
 
@@ -163,8 +172,25 @@ void Renderer::Render(const Car &car,
   // Render turning circles
   RenderTurningCircles(car);
 
-  // Render car
-  RenderGameObject(&car);
+  // Render car as Polygon
+  SDL_Color car_color = {car.color.r, car.color.g, car.color.b, car.color.a};
+  RenderPolygon(car.getCorners(), car_color);
+
+  // Render forward indicator (Headlights strip)
+  SDL_Rect head;
+  float yaw_rad = car.getPose().yaw * 3.14159 / 180.0;
+  // Front is at +length/2. Length is 162.
+  float fx = car.getPose().x + (162.0f / 2.0f - 2.5f) * std::cos(yaw_rad);
+  float fy = car.getPose().y + (162.0f / 2.0f - 2.5f) * std::sin(yaw_rad);
+  
+  head.x = (int)(fx - 2.5f);
+  head.y = (int)(fy - 33.0f); // car half-width is 33
+  head.w = 5;
+  head.h = 66;
+
+  SDL_SetTextureColorMod(white_texture, 255, 255, 255);
+  SDL_SetTextureAlphaMod(white_texture, 255);
+  SDL_RenderCopyEx(sdl_renderer, white_texture, NULL, &head, car.getPose().yaw, NULL, SDL_FLIP_NONE);
 
   // Render measuring line
   if (m_x1 != -1 && m_x2 != -1) {

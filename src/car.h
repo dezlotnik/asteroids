@@ -13,12 +13,13 @@ public:
   void Update();
   void updatePose() override;
   enum class ThrottleState { kNone, kForward, kReverse };
-  enum class SteeringState { kNone, kLeft, kRight };
+  enum class SteeringState { kNone, kLeft, kRight, kFlip };
   ThrottleState throttle_state = ThrottleState::kNone;
   SteeringState steering_state = SteeringState::kNone;
   
   float steering_angle = 0.0;
   float speed = 0.0;
+  bool is_flipped = false;
   
   // Adjusted for Outside Front Wheel Turning Radius of 20.65ft
   const float max_steering_angle = 33.4 * 3.14159 / 180.0;

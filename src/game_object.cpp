@@ -39,6 +39,16 @@ std::vector<GameObject::Point> GameObject::getCorners() const {
   float c = cos(rad);
   float s = sin(rad);
 
+  if (!vertices_.empty()) {
+    for (const auto& v : vertices_) {
+      corners.push_back({
+          pose_.x + v.x * c - v.y * s,
+          pose_.y + v.x * s + v.y * c
+      });
+    }
+    return corners;
+  }
+
   float half_w = width_ / 2.0;
   float half_h = height_ / 2.0;
 

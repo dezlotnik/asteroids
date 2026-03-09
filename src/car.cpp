@@ -9,8 +9,34 @@ Car::Car() {
   use_color = true;
   color = {0, 122, 204, 255}; // Blue
 
+  // Define vertices for BMW X5 with Side Mirrors (relative to center)
+  // Length: 162px, Width: 66px
+  // Mirrors: at x = +30 (front-third), 9 inches wide (9px)
+  
+  float half_l = 81.0f;
+  float half_w = 33.0f;
+  float mirror_ext = 9.0f; // 9 inches extension per side
+  float mirror_x = 30.0f;  // Positioning mirrors towards the front
+  float mirror_w = 5.0f;   // Thickness of mirror
+
+  // 12-point polygon: 
+  // Nose (2), Front-Right Mirror (3), Rear-Right (1), Rear-Left (1), Front-Left Mirror (3), Nose-Left (2)
+  vertices_ = {
+    {half_l, -half_w + 5},      // Front Right bumper corner (slightly tapered)
+    {mirror_x + mirror_w, -half_w}, // Right mirror start
+    {mirror_x + mirror_w, -half_w - mirror_ext}, // Right mirror tip front
+    {mirror_x - mirror_w, -half_w - mirror_ext}, // Right mirror tip back
+    {mirror_x - mirror_w, -half_w}, // Right mirror end
+    {-half_l + 5, -half_w},     // Rear Right corner
+    {-half_l + 5, half_w},      // Rear Left corner
+    {mirror_x - mirror_w, half_w},  // Left mirror start back
+    {mirror_x - mirror_w, half_w + mirror_ext},  // Left mirror tip back
+    {mirror_x + mirror_w, half_w + mirror_ext},  // Left mirror tip front
+    {mirror_x + mirror_w, half_w},  // Left mirror end front
+    {half_l, half_w - 5}        // Front Left bumper corner (slightly tapered)
+  };
+
   lives_ = 3;
-  // 2.0 px/frame * 60 fps = 120 px/s = 12 ft/s = ~8 mph
   maximum_speed_ = 2.0;
   minimum_speed_ = -2.0;
 }
@@ -43,12 +69,8 @@ void Car::updatePose() {
   float L = 98.0; // Wheelbase
   float lr = 46.0; // Dist from center to rear axle
 
-  // 1. Angular velocity
   float dyaw_rad = (speed / L) * tan(steering_angle);
 
-  // 2. Linear velocity of geometric center
-  // Derived from: V_center = V_rear + omega x r_center/rear
-  // V_rear is always [v*cos(psi), v*sin(psi)]
   float dx = speed * cos(yaw_rad) - (dyaw_rad * lr * sin(yaw_rad));
   float dy = speed * sin(yaw_rad) + (dyaw_rad * lr * cos(yaw_rad));
 

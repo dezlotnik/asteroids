@@ -26,6 +26,9 @@ void Controller::HandleInput(bool &running, Car &car, Game &game) const {
         case SDLK_r:
           game.Reset();
           break;
+        case SDLK_t:
+          car.setPose(car.getPose().x, car.getPose().y, car.getPose().yaw + 180.0f);
+          break;
         case SDLK_m:
           game.measure_mode = !game.measure_mode;
           if (!game.measure_mode) {

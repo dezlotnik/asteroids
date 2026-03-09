@@ -39,13 +39,14 @@ public:
   virtual void kill() { alive_ = false; }
 
   struct Point { float x, y; };
-  std::vector<Point> getCorners() const;
+  virtual std::vector<Point> getCorners() const;
 
   struct Color { Uint8 r, g, b, a; };
   Color color = {255, 255, 255, 255};
   bool use_color = false;
 
 protected:
+  std::vector<Point> vertices_; // Relative to center (yaw=0)
   float maximum_speed_ = 10.0;
   float minimum_speed_ = 0.0;
   float maximum_angular_velocity_ = 0.0;
