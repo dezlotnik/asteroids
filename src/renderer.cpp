@@ -133,7 +133,45 @@ void Renderer::RenderTurningCircles(const Car &car) {
   DrawCircle((int)icr_x, (int)icr_y, (int)r_right);
 }
 
+void Renderer::FillPolygon(const std::vector<GameObject::Point>& corners, SDL_Color color) {
+  if (corners.empty()) return;
+
+  // Simple scanline fill for convex polygons
+  int minY = static_cast<int>(corners[0].y);
+  int maxY = minY;
+  for (const auto& p : corners) {
+    minY = std::min(minY, static_cast<int>(p.y));
+    maxY = std::max(maxY, static_cast<int>(p.y));
+  }
+
+  SDL_SetRenderDrawColor(sdl_renderer, color.r, color.g, color.b, color.a);
+  SDL_SetRenderDrawBlendMode(sdl_renderer, SDL_BLENDMODE_BLEND);
+
+  for (int y = minY; y <= maxY; y++) {
+    std::vector<int> nodes;
+    for (size_t i = 0; i < corners.size(); i++) {
+      const auto& p1 = corners[i];
+      const auto& p2 = corners[(i + 1) % corners.size()];
+      if ((p1.y < y && p2.y >= y) || (p2.y < y && p1.y >= y)) {
+        nodes.push_back(static_cast<int>(p1.x + (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y)));
+      }
+    }
+    std::sort(nodes.begin(), nodes.end());
+    for (size_t i = 0; i < nodes.size(); i += 2) {
+      if (i + 1 < nodes.size()) {
+        SDL_RenderDrawLine(sdl_renderer, nodes[i], y, nodes[i + 1], y);
+      }
+    }
+  }
+}
+
 void Renderer::RenderGameObject(const GameObject *game_object) {
+  if (game_object->getImageName() == "driveway_shaded") {
+    SDL_Color color = {game_object->color.r, game_object->color.g, game_object->color.b, game_object->color.a};
+    FillPolygon(game_object->getCorners(), color);
+    return;
+  }
+
   SDL_Rect destination;
   destination.x = static_cast<int>(game_object->getPose().x - game_object->getWidth() / 2);
   destination.y = static_cast<int>(game_object->getPose().y - game_object->getHeight() / 2);

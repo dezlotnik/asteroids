@@ -36,6 +36,7 @@ void Game::LoadGeometryConfig(std::string path) {
     float value;
     if (!(iss >> key >> value)) continue;
     if (key == "driveway_width") config.driveway_width = value;
+    else if (key == "driveway_top_width") config.driveway_top_width = value;
     else if (key == "driveway_depth") config.driveway_depth = value;
     else if (key == "carport_door_width") config.carport_door_width = value;
     else if (key == "carport_inside_width") config.carport_inside_width = value;
@@ -113,50 +114,75 @@ void Game::BuildEnvironment() {
     // 4. DRIVEWAY Y-DIMENSIONS
     float dw_depth_px = config.driveway_depth * 10.0f;
     float dw_top_y = baseline_y - dw_depth_px;
+    float dw_top_width_px = config.driveway_top_width * 10.0f;
+    
+    // Left side is vertical
+    float dw_top_left_x = dw_left_x;
+    // Right side is tapered
+    float dw_top_right_x = dw_left_x + dw_top_width_px;
     
     // Visual indicator of driveway (clear space)
     auto driveway = std::make_unique<GameObject>();
-    driveway->setPose(dw_center_x, (baseline_y + dw_top_y) / 2.0f, 0); 
-    driveway->setWidth(dw_width_px);
-    driveway->setHeight(dw_depth_px);
+    driveway->setPose(dw_left_x, baseline_y, 0); 
+    // Define trapezoid vertices relative to (dw_left_x, baseline_y)
+    // Bottom-Left, Bottom-Right, Top-Right, Top-Left
+    driveway->setVertices({
+        {0, 0},
+        {dw_width_px, 0},
+        {dw_top_right_x - dw_left_x, -dw_depth_px},
+        {0, -dw_depth_px}
+    });
     driveway->use_color = true;
     driveway->color = {80, 80, 80, 255}; 
-    driveway->setImageName("target"); 
+    driveway->setImageName("driveway_shaded"); 
     obstacles.insert(obstacles.begin(), std::move(driveway));
 
-    // Driveway side walls (outside driveway width)
+    // Driveway side walls
+    // Left side wall (Exactly vertical)
     auto wall_dw_l = std::make_unique<GameObject>();
-    wall_dw_l->setPose(dw_left_x - kWallThickness / 2.0f, (baseline_y + dw_top_y) / 2.0f, 0);
-    wall_dw_l->setWidth(kWallThickness);
-    wall_dw_l->setHeight(dw_depth_px);
+    wall_dw_l->setPose(dw_left_x - kWallThickness / 2.0f, (baseline_y + dw_top_y) / 2.0f, -90);
+    wall_dw_l->setWidth(dw_depth_px);
+    wall_dw_l->setHeight(kWallThickness);
     wall_dw_l->use_color = true;
     wall_dw_l->color = {120, 120, 120, 255};
     obstacles.push_back(std::move(wall_dw_l));
 
+    // Right side wall (Tapered)
+    float dx_r = dw_top_right_x - dw_right_x;
+    float dy = dw_top_y - baseline_y;
+    float length_r = std::sqrt(dx_r * dx_r + dy * dy);
+    float angle_r = std::atan2(dy, dx_r) * 180.0f / M_PI;
+
     auto wall_dw_r = std::make_unique<GameObject>();
-    wall_dw_r->setPose(dw_right_x + kWallThickness / 2.0f, (baseline_y + dw_top_y) / 2.0f, 0);
-    wall_dw_r->setWidth(kWallThickness);
-    wall_dw_r->setHeight(dw_depth_px);
+    float perp_angle_r = (angle_r + 90.0f) * M_PI / 180.0f;
+    float offset_x_r = (kWallThickness / 2.0f) * std::cos(perp_angle_r);
+    float offset_y_r = (kWallThickness / 2.0f) * std::sin(perp_angle_r);
+
+    wall_dw_r->setPose((dw_right_x + dw_top_right_x) / 2.0f + offset_x_r, 
+                       (baseline_y + dw_top_y) / 2.0f + offset_y_r, 
+                       angle_r);
+    wall_dw_r->setWidth(length_r);
+    wall_dw_r->setHeight(kWallThickness);
     wall_dw_r->use_color = true;
     wall_dw_r->color = {120, 120, 120, 255};
     obstacles.push_back(std::move(wall_dw_r));
 
     // 5. CARPORT ASSEMBLY
     
-    // Top driveway boundary walls (connecting driveway sides to carport posts)
-    if (door_left_x > dw_left_x) {
+    // Top driveway boundary walls (connecting tapered driveway side tops to carport posts)
+    if (door_left_x > dw_top_left_x) {
         auto wall_dw_tl = std::make_unique<GameObject>();
-        float w = door_left_x - dw_left_x;
-        wall_dw_tl->setPose(dw_left_x + w / 2.0f, dw_top_y - kWallThickness / 2.0f, 0);
+        float w = door_left_x - dw_top_left_x;
+        wall_dw_tl->setPose(dw_top_left_x + w / 2.0f, dw_top_y - kWallThickness / 2.0f, 0);
         wall_dw_tl->setWidth(w);
         wall_dw_tl->setHeight(kWallThickness);
         wall_dw_tl->use_color = true;
         wall_dw_tl->color = {120, 120, 120, 255};
         obstacles.push_back(std::move(wall_dw_tl));
     }
-    if (dw_right_x > door_right_x) {
+    if (dw_top_right_x > door_right_x) {
         auto wall_dw_tr = std::make_unique<GameObject>();
-        float w = dw_right_x - door_right_x;
+        float w = dw_top_right_x - door_right_x;
         wall_dw_tr->setPose(door_right_x + w / 2.0f, dw_top_y - kWallThickness / 2.0f, 0); 
         wall_dw_tr->setWidth(w);
         wall_dw_tr->setHeight(kWallThickness);
@@ -270,7 +296,8 @@ void Game::Update() {
 
   bool collision = false;
   for (auto const &obstacle : obstacles) {
-    if (obstacle->getImageName() == "target") continue; 
+    if (obstacle->getImageName() == "target" || 
+        obstacle->getImageName() == "driveway_shaded") continue; 
     if (CollisionDetection::detect_collision(car, *obstacle)) {
       collision = true;
       break;

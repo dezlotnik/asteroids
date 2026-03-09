@@ -2,17 +2,18 @@
 
 # Dimensions of the driveway area (ft)
 driveway_width 25.95
-driveway_depth 9.61
+driveway_top_width 21.2
+driveway_depth 9.6
 
 # Dimensions of the carport entrance (ft)
-carport_door_width 10.0
+carport_door_width 12
 
 # Inside dimensions of the carport structure (ft)
-carport_inside_width 11.25
+carport_inside_width 12
 carport_inside_depth 25.25
 
 # Width of the access alleyway (ft)
-alley_width 12.5
+alley_width 12.0
 
 # Horizontal alignment (ft)
 # carport_x_offset: shift entire carport left/right from screen center
@@ -20,14 +21,14 @@ carport_x_offset 0.0
 
 # driveway_x_offset: shift driveway left/right relative to carport left post
 # (-1.0 puts driveway edge 1ft left of the post)
-driveway_x_offset -1.0
+driveway_x_offset 0
 
 # Car starting position (ft)
 # car_start_x: position along the alley (0 to 80ft)
 car_start_x 70.0
 
 # car_start_y_offset: offset from alley centerline (0 is center, positive is down)
-car_start_y_offset 2.75
+car_start_y_offset 0.0
 
 # car_start_facing_right: 1 for facing right (0 deg), 0 for facing left (180 deg)
 car_start_facing_right 0

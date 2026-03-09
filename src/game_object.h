@@ -10,6 +10,7 @@ using namespace ParkingConstants;
 
 class GameObject {
 public:
+  struct Point { float x, y; };
   GameObject() {}
   struct Pose {
     float x = 0.0;
@@ -35,10 +36,10 @@ public:
   void setImageName(std::string name) { image_name_ = name; }
   void setHeight(float height) { height_ = height; }
   void setWidth(float width) { width_ = width; }
+  void setVertices(const std::vector<Point>& vertices) { vertices_ = vertices; }
   bool isAlive() const { return alive_; }
   virtual void kill() { alive_ = false; }
 
-  struct Point { float x, y; };
   virtual std::vector<Point> getCorners() const;
 
   struct Color { Uint8 r, g, b, a; };

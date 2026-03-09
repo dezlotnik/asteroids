@@ -30,15 +30,16 @@ class Game {
 
   struct GeometryConfig {
     float driveway_width = 25.95f;
+    float driveway_top_width = 21.2f;
     float driveway_depth = 9.6f;
-    float carport_door_width = 10.0f;
-    float carport_inside_width = 11.25f;
+    float carport_door_width = 12.0f;
+    float carport_inside_width = 12.0f;
     float carport_inside_depth = 25.25f;
-    float alley_width = 12.5f;
+    float alley_width = 12.0f;
     float carport_x_offset = 0.0f; // Offset from screen center (400)
-    float driveway_x_offset = -1.0f; // Offset from carport left post
+    float driveway_x_offset = 0.0f; // Offset from carport left post
     float car_start_x = 70.0f; // ft along alley
-    float car_start_y_offset = 3.0f; // ft from alley centerline
+    float car_start_y_offset = 0.0f; // ft from alley centerline
     float car_start_facing_right = 0.0f; // 1 for right, 0 for left
   };
 

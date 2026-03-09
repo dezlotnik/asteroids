@@ -17,6 +17,7 @@ class Renderer {
               int mouse_x = -1, int mouse_y = -1);
   void RenderGameObject(const GameObject *game_object);
   void RenderPolygon(const std::vector<GameObject::Point>& corners, SDL_Color color);
+  void FillPolygon(const std::vector<GameObject::Point>& corners, SDL_Color color);
   void RenderTurningCircles(const Car &car);
   void DrawCircle(int x, int y, int radius);
   void UpdateWindowTitle(float steering_angle, int fps, bool measure_mode, float measure_ft = 0.0f);
