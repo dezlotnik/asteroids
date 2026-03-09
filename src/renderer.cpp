@@ -147,7 +147,9 @@ void Renderer::RenderGameObject(const GameObject *game_object) {
 }
 
 void Renderer::Render(const Car &car,
-                      const std::vector<std::unique_ptr<GameObject>> &obstacles) {
+                      const std::vector<std::unique_ptr<GameObject>> &obstacles,
+                      int m_x1, int m_y1, int m_x2, int m_y2,
+                      int mouse_x, int mouse_y) {
   // Clear screen (Dark Gray)
   SDL_SetRenderDrawColor(sdl_renderer, 50, 50, 50, 255);
   SDL_RenderClear(sdl_renderer);
@@ -163,10 +165,29 @@ void Renderer::Render(const Car &car,
   // Render car
   RenderGameObject(&car);
 
+  // Render measuring line
+  if (m_x1 != -1 && m_x2 != -1) {
+    SDL_SetRenderDrawColor(sdl_renderer, 255, 255, 0, 255); // Yellow
+    SDL_RenderDrawLine(sdl_renderer, m_x1, m_y1, m_x2, m_y2);
+  }
+
+  // Render mouse crosshair
+  if (mouse_x != -1 && mouse_y != -1) {
+    SDL_SetRenderDrawColor(sdl_renderer, 255, 255, 255, 255); // White
+    SDL_RenderDrawLine(sdl_renderer, mouse_x - 5, mouse_y, mouse_x + 5, mouse_y);
+    SDL_RenderDrawLine(sdl_renderer, mouse_x, mouse_y - 5, mouse_x, mouse_y + 5);
+  }
+
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::UpdateWindowTitle(float steering_angle, int fps) {
+void Renderer::UpdateWindowTitle(float steering_angle, int fps, bool measure_mode, float measure_ft) {
   std::string title = "Parking Sim | Steering: " + std::to_string((int)steering_angle) + " deg | FPS: " + std::to_string(fps);
+  if (measure_mode) {
+    title += " | [MEASURE MODE]";
+  }
+  if (measure_ft > 0.001f) {
+    title += " | Distance: " + std::to_string(measure_ft) + " ft";
+  }
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

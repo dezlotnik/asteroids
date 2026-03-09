@@ -2,8 +2,9 @@
 #include <iostream>
 #include "SDL.h"
 #include "car.h"
+#include "game.h"
 
-void Controller::HandleInput(bool &running, Car &car) const {
+void Controller::HandleInput(bool &running, Car &car, Game &game) const {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
     if (e.type == SDL_QUIT) {
@@ -21,6 +22,18 @@ void Controller::HandleInput(bool &running, Car &car) const {
           break;
         case SDLK_RIGHT:
           car.steering_state = Car::SteeringState::kRight;
+          break;
+        case SDLK_r:
+          game.Reset();
+          break;
+        case SDLK_m:
+          game.measure_mode = !game.measure_mode;
+          if (!game.measure_mode) {
+            game.measure_p1 = {-1, -1};
+            game.measure_p2 = {-1, -1};
+            game.current_measure_ft = 0.0f;
+            game.is_measuring = false;
+          }
           break;
         default :
           break;
@@ -45,6 +58,24 @@ void Controller::HandleInput(bool &running, Car &car) const {
           break;
         default:
           break;
+      }
+    } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+      if (game.measure_mode && e.button.button == SDL_BUTTON_LEFT) {
+        game.measure_p1 = {e.button.x, e.button.y};
+        game.measure_p2 = {e.button.x, e.button.y};
+        game.mouse_pos = {e.button.x, e.button.y};
+        game.is_measuring = true;
+      }
+    } else if (e.type == SDL_MOUSEMOTION) {
+      game.mouse_pos = {e.motion.x, e.motion.y};
+      if (game.measure_mode && game.is_measuring) {
+        game.measure_p2 = {e.motion.x, e.motion.y};
+      }
+    } else if (e.type == SDL_MOUSEBUTTONUP) {
+      if (game.measure_mode && e.button.button == SDL_BUTTON_LEFT) {
+        game.measure_p2 = {e.button.x, e.button.y};
+        game.mouse_pos = {e.button.x, e.button.y};
+        game.is_measuring = false;
       }
     }
   }

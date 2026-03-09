@@ -1,6 +1,9 @@
 #include "game.h"
 #include <iostream>
 #include <memory>
+#include <cmath>
+#include <fstream>
+#include <sstream>
 #include "SDL.h"
 #include "collision_detection.h"
 
@@ -8,54 +11,112 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
       screen_width(screen_width),
       screen_height(screen_height) {
     
-    // Scale: 10 pixels = 1 foot.
-    // Car starts on the right side of the alley, facing Left (yaw = 180.0)
-    car.setPose(700, 500, 180.0);
+    Reset();
+}
 
-    // Alley bottom wall (12.5ft wide alley)
+void Game::Reset() {
+    LoadGeometryConfig("../data/geometry.txt");
+    BuildEnvironment();
+    car.speed = 0.0f;
+    car.steering_angle = 0.0f;
+    car.color = {0, 122, 204, 255};
+}
+
+void Game::LoadGeometryConfig(std::string path) {
+  std::ifstream file(path);
+  if (!file.is_open()) {
+    std::cerr << "Could not open config file: " << path << ". Using defaults.\n";
+    return;
+  }
+  std::string line;
+  while (std::getline(file, line)) {
+    if (line.empty() || line[0] == '#') continue;
+    std::istringstream iss(line);
+    std::string key;
+    float value;
+    if (!(iss >> key >> value)) continue;
+    if (key == "driveway_width") config.driveway_width = value;
+    else if (key == "driveway_depth") config.driveway_depth = value;
+    else if (key == "carport_door_width") config.carport_door_width = value;
+    else if (key == "carport_inside_width") config.carport_inside_width = value;
+    else if (key == "carport_inside_depth") config.carport_inside_depth = value;
+    else if (key == "alley_width") config.alley_width = value;
+    else if (key == "carport_x_offset") config.carport_x_offset = value;
+    else if (key == "driveway_x_offset") config.driveway_x_offset = value;
+    else if (key == "car_start_x") config.car_start_x = value;
+    else if (key == "car_start_y_offset") config.car_start_y_offset = value;
+    else if (key == "car_start_facing_right") config.car_start_facing_right = value;
+  }
+  std::cout << "Geometry Loaded and Simulation Reset.\n";
+}
+
+void Game::BuildEnvironment() {
+    obstacles.clear();
+    // Scale: 10 pixels = 1 foot.
+    
+    // PRIMARY VERTICAL ANCHOR (Boundary between Alley and Driveway)
+    float baseline_y = 440.0f;
+    
+    // PRIMARY HORIZONTAL ANCHOR (Center of Carport, shifted by offset)
+    float center_x = 400.0f + (config.carport_x_offset * 10.0f);
+
+    // 1. ALLEYWAY
+    float alley_width_px = config.alley_width * 10.0f;
+    float alley_bottom_y = baseline_y + alley_width_px;
+    float alley_center_y = baseline_y + (alley_width_px / 2.0f);
+    
+    // Position car based on config
+    float start_x_px = config.car_start_x * 10.0f;
+    float start_y_px = alley_center_y + (config.car_start_y_offset * 10.0f);
+    float start_yaw = (config.car_start_facing_right > 0.5f) ? 0.0f : 180.0f;
+    car.setPose(start_x_px, start_y_px, start_yaw);
+
     auto wall_bottom = std::make_unique<GameObject>();
-    wall_bottom->setPose(screen_width/2.0f, 565, 0);
+    wall_bottom->setPose(screen_width/2.0f, alley_bottom_y + 5.0f, 0);
     wall_bottom->setWidth(screen_width);
     wall_bottom->setHeight(10);
     wall_bottom->use_color = true;
     wall_bottom->color = {100, 100, 100, 255};
     obstacles.push_back(std::move(wall_bottom));
 
-    float alley_top_y = 440.0;
-    
-    // Driveway is 25.95ft wide (259.5 px).
-    // Left boundary shifted left by 1ft (10px) from the door post (at 350).
-    // New left edge = 340.
-    // New right edge = 340 + 259.5 = 599.5.
-    float dw_left_x = 340.0;
-    float dw_right_x = 599.5;
-    float dw_width = 259.5;
+    // 2. DOOR X-DIMENSIONS
+    float door_width_px = config.carport_door_width * 10.0f;
+    float door_left_x = center_x - (door_width_px / 2.0f);
+    float door_right_x = center_x + (door_width_px / 2.0f);
+
+    // 3. DRIVEWAY X-DIMENSIONS (Anchored to Door Left Edge + offset)
+    float dw_left_x = door_left_x + (config.driveway_x_offset * 10.0f); 
+    float dw_width_px = config.driveway_width * 10.0f;
+    float dw_right_x = dw_left_x + dw_width_px;
     float dw_center_x = (dw_left_x + dw_right_x) / 2.0f;
 
-    // Alley top wall with 25.95ft gap from dw_left_x to dw_right_x
+    // Alley top walls (Gap for driveway)
     auto wall_top_l = std::make_unique<GameObject>();
-    wall_top_l->setPose(dw_left_x / 2.0f, alley_top_y, 0);
-    wall_top_l->setWidth(dw_left_x); 
+    float w_l = std::max(0.0f, dw_left_x);
+    wall_top_l->setPose(w_l / 2.0f, baseline_y - 5.0f, 0); 
+    wall_top_l->setWidth(w_l); 
     wall_top_l->setHeight(10);
     wall_top_l->use_color = true;
     wall_top_l->color = {100, 100, 100, 255};
     obstacles.push_back(std::move(wall_top_l));
 
     auto wall_top_r = std::make_unique<GameObject>();
-    float wall_r_width = screen_width - dw_right_x;
-    wall_top_r->setPose(dw_right_x + wall_r_width / 2.0f, alley_top_y, 0); 
-    wall_top_r->setWidth(wall_r_width); 
+    float w_r = std::max(0.0f, (float)screen_width - dw_right_x);
+    wall_top_r->setPose(dw_right_x + w_r / 2.0f, baseline_y - 5.0f, 0); 
+    wall_top_r->setWidth(w_r); 
     wall_top_r->setHeight(10);
     wall_top_r->use_color = true;
     wall_top_r->color = {100, 100, 100, 255};
     obstacles.push_back(std::move(wall_top_r));
 
-    // Driveway floor
-    float driveway_top_y = 343.9;
+    // 4. DRIVEWAY Y-DIMENSIONS
+    float dw_depth_px = config.driveway_depth * 10.0f;
+    float dw_top_y = baseline_y - dw_depth_px;
+    
     auto driveway = std::make_unique<GameObject>();
-    driveway->setPose(dw_center_x, 391.95, 0); 
-    driveway->setWidth(dw_width);
-    driveway->setHeight(96.1);
+    driveway->setPose(dw_center_x, (baseline_y + dw_top_y) / 2.0f, 0); 
+    driveway->setWidth(dw_width_px);
+    driveway->setHeight(dw_depth_px);
     driveway->use_color = true;
     driveway->color = {80, 80, 80, 255}; 
     driveway->setImageName("target"); 
@@ -63,44 +124,48 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
 
     // Driveway side walls
     auto wall_dw_l = std::make_unique<GameObject>();
-    wall_dw_l->setPose(dw_left_x - 2.5f, 391.95, 0); // Inner face at 340
+    wall_dw_l->setPose(dw_left_x - 2.5f, (baseline_y + dw_top_y) / 2.0f, 0);
     wall_dw_l->setWidth(5);
-    wall_dw_l->setHeight(96.1);
+    wall_dw_l->setHeight(dw_depth_px);
     wall_dw_l->use_color = true;
     wall_dw_l->color = {120, 120, 120, 255};
     obstacles.push_back(std::move(wall_dw_l));
 
     auto wall_dw_r = std::make_unique<GameObject>();
-    wall_dw_r->setPose(dw_right_x + 2.5f, 391.95, 0); // Inner face at 599.5
+    wall_dw_r->setPose(dw_right_x + 2.5f, (baseline_y + dw_top_y) / 2.0f, 0);
     wall_dw_r->setWidth(5);
-    wall_dw_r->setHeight(96.1);
+    wall_dw_r->setHeight(dw_depth_px);
     wall_dw_r->use_color = true;
     wall_dw_r->color = {120, 120, 120, 255};
     obstacles.push_back(std::move(wall_dw_r));
 
-    // Top driveway boundary wall
-    // Connects left driveway wall (340) to left door post (350)
-    auto wall_dw_tl = std::make_unique<GameObject>();
-    wall_dw_tl->setPose(345, driveway_top_y, 0);
-    wall_dw_tl->setWidth(10);
-    wall_dw_tl->setHeight(10);
-    wall_dw_tl->use_color = true;
-    wall_dw_tl->color = {120, 120, 120, 255};
-    obstacles.push_back(std::move(wall_dw_tl));
-
-    // Connects right door post (450) to right driveway wall (599.5)
-    // Width = 149.5. Center = 450 + 74.75 = 524.75
-    auto wall_dw_tr = std::make_unique<GameObject>();
-    wall_dw_tr->setPose(524.75, driveway_top_y, 0); 
-    wall_dw_tr->setWidth(149.5);
-    wall_dw_tr->setHeight(10);
-    wall_dw_tr->use_color = true;
-    wall_dw_tr->color = {120, 120, 120, 255};
-    obstacles.push_back(std::move(wall_dw_tr));
+    // 5. CARPORT ASSEMBLY
+    
+    // Top driveway boundary walls
+    if (door_left_x > dw_left_x) {
+        auto wall_dw_tl = std::make_unique<GameObject>();
+        float w = door_left_x - dw_left_x;
+        wall_dw_tl->setPose(dw_left_x + w/2.0f, dw_top_y + 5.0f, 0);
+        wall_dw_tl->setWidth(w);
+        wall_dw_tl->setHeight(10);
+        wall_dw_tl->use_color = true;
+        wall_dw_tl->color = {120, 120, 120, 255};
+        obstacles.push_back(std::move(wall_dw_tl));
+    }
+    if (dw_right_x > door_right_x) {
+        auto wall_dw_tr = std::make_unique<GameObject>();
+        float w = dw_right_x - door_right_x;
+        wall_dw_tr->setPose(door_right_x + w/2.0f, dw_top_y + 5.0f, 0); 
+        wall_dw_tr->setWidth(w);
+        wall_dw_tr->setHeight(10);
+        wall_dw_tr->use_color = true;
+        wall_dw_tr->color = {120, 120, 120, 255};
+        obstacles.push_back(std::move(wall_dw_tr));
+    }
 
     // Carport door posts
     auto post_l = std::make_unique<GameObject>();
-    post_l->setPose(344, driveway_top_y, 0); // Inner edge at 350
+    post_l->setPose(door_left_x - 6.0f, dw_top_y - 6.0f, 0); 
     post_l->setWidth(12);
     post_l->setHeight(12);
     post_l->use_color = true;
@@ -108,7 +173,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
     obstacles.push_back(std::move(post_l));
 
     auto post_r = std::make_unique<GameObject>();
-    post_r->setPose(456, driveway_top_y, 0); // Inner edge at 450
+    post_r->setPose(door_right_x + 6.0f, dw_top_y - 6.0f, 0); 
     post_r->setWidth(12);
     post_r->setHeight(12);
     post_r->use_color = true;
@@ -116,27 +181,33 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
     obstacles.push_back(std::move(post_r));
 
     // Carport interior
-    float int_center_y = 217.65;
+    float in_width_px = config.carport_inside_width * 10.0f;
+    float in_depth_px = config.carport_inside_depth * 10.0f;
+    float in_left_x = center_x - in_width_px / 2.0f;
+    float in_right_x = center_x + in_width_px / 2.0f;
+    float in_back_y = dw_top_y - in_depth_px;
+    float in_center_y = (dw_top_y + in_back_y) / 2.0f;
+
     auto wall_int_l = std::make_unique<GameObject>();
-    wall_int_l->setPose(341.25, int_center_y, 0); // Inner face at 343.75
+    wall_int_l->setPose(in_left_x - 2.5f, in_center_y, 0);
     wall_int_l->setWidth(5);
-    wall_int_l->setHeight(252.5); 
+    wall_int_l->setHeight(in_depth_px); 
     wall_int_l->use_color = true;
     wall_int_l->color = {150, 150, 150, 255};
     obstacles.push_back(std::move(wall_int_l));
 
     auto wall_int_r = std::make_unique<GameObject>();
-    wall_int_r->setPose(458.75, int_center_y, 0); // Inner face at 456.25
+    wall_int_r->setPose(in_right_x + 2.5f, in_center_y, 0);
     wall_int_r->setWidth(5);
-    wall_int_r->setHeight(252.5);
+    wall_int_r->setHeight(in_depth_px);
     wall_int_r->use_color = true;
     wall_int_r->color = {150, 150, 150, 255};
     obstacles.push_back(std::move(wall_int_r));
     
     // Back wall
     auto wall_back = std::make_unique<GameObject>();
-    wall_back->setPose(400, 91.4, 0);
-    wall_back->setWidth(112.5);
+    wall_back->setPose(center_x, in_back_y - 5.0f, 0);
+    wall_back->setWidth(in_width_px);
     wall_back->setHeight(10);
     wall_back->use_color = true;
     wall_back->color = {150, 150, 150, 255};
@@ -144,7 +215,7 @@ Game::Game(std::size_t screen_width, std::size_t screen_height) :
 
     // Parking target
     auto target = std::make_unique<GameObject>();
-    target->setPose(400, 172.4, -90.0);
+    target->setPose(center_x, in_back_y + 81.0f, -90.0);
     target->setWidth(162);
     target->setHeight(66);
     target->use_color = true;
@@ -164,17 +235,21 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
   while (running) {
     frame_start = SDL_GetTicks();
-    controller.HandleInput(running, car);
+
+    controller.HandleInput(running, car, *this);
     Update();
-    renderer.Render(car, obstacles);
+    renderer.Render(car, obstacles, measure_p1.x, measure_p1.y, measure_p2.x, measure_p2.y, mouse_pos.x, mouse_pos.y);
+
     frame_end = SDL_GetTicks();
     frame_count++;
     frame_duration = frame_end - frame_start;
+
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(car.getSteeringAngleDeg(), frame_count);
+      renderer.UpdateWindowTitle(car.getSteeringAngleDeg(), frame_count, measure_mode, current_measure_ft);
       frame_count = 0;
       title_timestamp = frame_end;
     }
+
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
@@ -182,7 +257,15 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
+  if (measure_p1.x != -1 && measure_p2.x != -1) {
+    float dx = (float)(measure_p2.x - measure_p1.x);
+    float dy = (float)(measure_p2.y - measure_p1.y);
+    current_measure_ft = std::sqrt(dx * dx + dy * dy) / 10.0f;
+  }
+
+  auto previous_pose = car.getPose();
   car.Update();
+
   bool collision = false;
   for (auto const &obstacle : obstacles) {
     if (obstacle->getImageName() == "target") continue; 
@@ -191,7 +274,9 @@ void Game::Update() {
       break;
     }
   }
+
   if (collision) {
+    car.setPose(previous_pose.x, previous_pose.y, previous_pose.yaw);
     car.use_color = true;
     car.color = {255, 0, 0, 255}; 
     car.speed = 0;

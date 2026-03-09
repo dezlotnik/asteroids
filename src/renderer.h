@@ -12,11 +12,13 @@ class Renderer {
   ~Renderer();
 
   void Render(const Car &car,
-              const std::vector<std::unique_ptr<GameObject>> &obstacles);
+              const std::vector<std::unique_ptr<GameObject>> &obstacles,
+              int m_x1 = -1, int m_y1 = -1, int m_x2 = -1, int m_y2 = -1,
+              int mouse_x = -1, int mouse_y = -1);
   void RenderGameObject(const GameObject *game_object);
   void RenderTurningCircles(const Car &car);
   void DrawCircle(int x, int y, int radius);
-  void UpdateWindowTitle(float steering_angle, int fps);
+  void UpdateWindowTitle(float steering_angle, int fps, bool measure_mode, float measure_ft = 0.0f);
 
  private:
   SDL_Window *sdl_window;
