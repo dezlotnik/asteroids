@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <algorithm>
 #include "SDL_image.h"
 
 Renderer::Renderer(const std::size_t screen_width,

@@ -4,6 +4,8 @@
 #include "game_object.h"
 #include <vector>
 #include <string>
+#include <cmath>
+#include <algorithm>
 
 class Car : public GameObject {
 public:
