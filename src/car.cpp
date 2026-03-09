@@ -15,7 +15,7 @@ Car::Car() {
   
   float half_l = 81.0f;
   float half_w = 33.0f;
-  float mirror_ext = 9.0f; // 9 inches extension per side
+  float mirror_ext = 4.2f; // 4.2 inches extension per side
   float mirror_x = 30.0f;  // Positioning mirrors towards the front
   float mirror_w = 5.0f;   // Thickness of mirror
 

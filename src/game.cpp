@@ -71,10 +71,11 @@ void Game::BuildEnvironment() {
     float start_yaw = (config.car_start_facing_right > 0.5f) ? 0.0f : 180.0f;
     car.setPose(start_x_px, start_y_px, start_yaw);
 
+    // Bottom alley wall (outside alley)
     auto wall_bottom = std::make_unique<GameObject>();
-    wall_bottom->setPose(screen_width/2.0f, alley_bottom_y + 5.0f, 0);
+    wall_bottom->setPose(screen_width / 2.0f, alley_bottom_y + kWallThickness / 2.0f, 0);
     wall_bottom->setWidth(screen_width);
-    wall_bottom->setHeight(10);
+    wall_bottom->setHeight(kWallThickness);
     wall_bottom->use_color = true;
     wall_bottom->color = {100, 100, 100, 255};
     obstacles.push_back(std::move(wall_bottom));
@@ -90,21 +91,21 @@ void Game::BuildEnvironment() {
     float dw_right_x = dw_left_x + dw_width_px;
     float dw_center_x = (dw_left_x + dw_right_x) / 2.0f;
 
-    // Alley top walls (Gap for driveway)
+    // Alley top walls (Gap for driveway, outside alley and driveway)
     auto wall_top_l = std::make_unique<GameObject>();
     float w_l = std::max(0.0f, dw_left_x);
-    wall_top_l->setPose(w_l / 2.0f, baseline_y - 5.0f, 0); 
+    wall_top_l->setPose(w_l / 2.0f, baseline_y - kWallThickness / 2.0f, 0); 
     wall_top_l->setWidth(w_l); 
-    wall_top_l->setHeight(10);
+    wall_top_l->setHeight(kWallThickness);
     wall_top_l->use_color = true;
     wall_top_l->color = {100, 100, 100, 255};
     obstacles.push_back(std::move(wall_top_l));
 
     auto wall_top_r = std::make_unique<GameObject>();
     float w_r = std::max(0.0f, (float)screen_width - dw_right_x);
-    wall_top_r->setPose(dw_right_x + w_r / 2.0f, baseline_y - 5.0f, 0); 
+    wall_top_r->setPose(dw_right_x + w_r / 2.0f, baseline_y - kWallThickness / 2.0f, 0); 
     wall_top_r->setWidth(w_r); 
-    wall_top_r->setHeight(10);
+    wall_top_r->setHeight(kWallThickness);
     wall_top_r->use_color = true;
     wall_top_r->color = {100, 100, 100, 255};
     obstacles.push_back(std::move(wall_top_r));
@@ -113,6 +114,7 @@ void Game::BuildEnvironment() {
     float dw_depth_px = config.driveway_depth * 10.0f;
     float dw_top_y = baseline_y - dw_depth_px;
     
+    // Visual indicator of driveway (clear space)
     auto driveway = std::make_unique<GameObject>();
     driveway->setPose(dw_center_x, (baseline_y + dw_top_y) / 2.0f, 0); 
     driveway->setWidth(dw_width_px);
@@ -122,18 +124,18 @@ void Game::BuildEnvironment() {
     driveway->setImageName("target"); 
     obstacles.insert(obstacles.begin(), std::move(driveway));
 
-    // Driveway side walls
+    // Driveway side walls (outside driveway width)
     auto wall_dw_l = std::make_unique<GameObject>();
-    wall_dw_l->setPose(dw_left_x - 2.5f, (baseline_y + dw_top_y) / 2.0f, 0);
-    wall_dw_l->setWidth(5);
+    wall_dw_l->setPose(dw_left_x - kWallThickness / 2.0f, (baseline_y + dw_top_y) / 2.0f, 0);
+    wall_dw_l->setWidth(kWallThickness);
     wall_dw_l->setHeight(dw_depth_px);
     wall_dw_l->use_color = true;
     wall_dw_l->color = {120, 120, 120, 255};
     obstacles.push_back(std::move(wall_dw_l));
 
     auto wall_dw_r = std::make_unique<GameObject>();
-    wall_dw_r->setPose(dw_right_x + 2.5f, (baseline_y + dw_top_y) / 2.0f, 0);
-    wall_dw_r->setWidth(5);
+    wall_dw_r->setPose(dw_right_x + kWallThickness / 2.0f, (baseline_y + dw_top_y) / 2.0f, 0);
+    wall_dw_r->setWidth(kWallThickness);
     wall_dw_r->setHeight(dw_depth_px);
     wall_dw_r->use_color = true;
     wall_dw_r->color = {120, 120, 120, 255};
@@ -141,13 +143,13 @@ void Game::BuildEnvironment() {
 
     // 5. CARPORT ASSEMBLY
     
-    // Top driveway boundary walls
+    // Top driveway boundary walls (connecting driveway sides to carport posts)
     if (door_left_x > dw_left_x) {
         auto wall_dw_tl = std::make_unique<GameObject>();
         float w = door_left_x - dw_left_x;
-        wall_dw_tl->setPose(dw_left_x + w/2.0f, dw_top_y + 5.0f, 0);
+        wall_dw_tl->setPose(dw_left_x + w / 2.0f, dw_top_y - kWallThickness / 2.0f, 0);
         wall_dw_tl->setWidth(w);
-        wall_dw_tl->setHeight(10);
+        wall_dw_tl->setHeight(kWallThickness);
         wall_dw_tl->use_color = true;
         wall_dw_tl->color = {120, 120, 120, 255};
         obstacles.push_back(std::move(wall_dw_tl));
@@ -155,32 +157,32 @@ void Game::BuildEnvironment() {
     if (dw_right_x > door_right_x) {
         auto wall_dw_tr = std::make_unique<GameObject>();
         float w = dw_right_x - door_right_x;
-        wall_dw_tr->setPose(door_right_x + w/2.0f, dw_top_y + 5.0f, 0); 
+        wall_dw_tr->setPose(door_right_x + w / 2.0f, dw_top_y - kWallThickness / 2.0f, 0); 
         wall_dw_tr->setWidth(w);
-        wall_dw_tr->setHeight(10);
+        wall_dw_tr->setHeight(kWallThickness);
         wall_dw_tr->use_color = true;
         wall_dw_tr->color = {120, 120, 120, 255};
         obstacles.push_back(std::move(wall_dw_tr));
     }
 
-    // Carport door posts
+    // Carport door posts (outside entrance clear space)
     auto post_l = std::make_unique<GameObject>();
-    post_l->setPose(door_left_x - 6.0f, dw_top_y - 6.0f, 0); 
-    post_l->setWidth(12);
-    post_l->setHeight(12);
+    post_l->setPose(door_left_x - kPostSize / 2.0f, dw_top_y - kPostSize / 2.0f, 0); 
+    post_l->setWidth(kPostSize);
+    post_l->setHeight(kPostSize);
     post_l->use_color = true;
     post_l->color = {255, 165, 0, 255}; 
     obstacles.push_back(std::move(post_l));
 
     auto post_r = std::make_unique<GameObject>();
-    post_r->setPose(door_right_x + 6.0f, dw_top_y - 6.0f, 0); 
-    post_r->setWidth(12);
-    post_r->setHeight(12);
+    post_r->setPose(door_right_x + kPostSize / 2.0f, dw_top_y - kPostSize / 2.0f, 0); 
+    post_r->setWidth(kPostSize);
+    post_r->setHeight(kPostSize);
     post_r->use_color = true;
     post_r->color = {255, 165, 0, 255};
     obstacles.push_back(std::move(post_r));
 
-    // Carport interior
+    // Carport interior (clear space width and depth)
     float in_width_px = config.carport_inside_width * 10.0f;
     float in_depth_px = config.carport_inside_depth * 10.0f;
     float in_left_x = center_x - in_width_px / 2.0f;
@@ -189,26 +191,26 @@ void Game::BuildEnvironment() {
     float in_center_y = (dw_top_y + in_back_y) / 2.0f;
 
     auto wall_int_l = std::make_unique<GameObject>();
-    wall_int_l->setPose(in_left_x - 2.5f, in_center_y, 0);
-    wall_int_l->setWidth(5);
+    wall_int_l->setPose(in_left_x - kWallThickness / 2.0f, in_center_y, 0);
+    wall_int_l->setWidth(kWallThickness);
     wall_int_l->setHeight(in_depth_px); 
     wall_int_l->use_color = true;
     wall_int_l->color = {150, 150, 150, 255};
     obstacles.push_back(std::move(wall_int_l));
 
     auto wall_int_r = std::make_unique<GameObject>();
-    wall_int_r->setPose(in_right_x + 2.5f, in_center_y, 0);
-    wall_int_r->setWidth(5);
+    wall_int_r->setPose(in_right_x + kWallThickness / 2.0f, in_center_y, 0);
+    wall_int_r->setWidth(kWallThickness);
     wall_int_r->setHeight(in_depth_px);
     wall_int_r->use_color = true;
     wall_int_r->color = {150, 150, 150, 255};
     obstacles.push_back(std::move(wall_int_r));
     
-    // Back wall
+    // Back wall (outside interior depth)
     auto wall_back = std::make_unique<GameObject>();
-    wall_back->setPose(center_x, in_back_y - 5.0f, 0);
+    wall_back->setPose(center_x, in_back_y - kWallThickness / 2.0f, 0);
     wall_back->setWidth(in_width_px);
-    wall_back->setHeight(10);
+    wall_back->setHeight(kWallThickness);
     wall_back->use_color = true;
     wall_back->color = {150, 150, 150, 255};
     obstacles.push_back(std::move(wall_back));

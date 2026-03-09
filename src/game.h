@@ -25,9 +25,12 @@ class Game {
   bool is_measuring = false;
   float current_measure_ft = 0.0f;
 
+  static constexpr float kWallThickness = 10.0f;
+  static constexpr float kPostSize = 12.0f;
+
   struct GeometryConfig {
     float driveway_width = 25.95f;
-    float driveway_depth = 9.61f;
+    float driveway_depth = 9.6f;
     float carport_door_width = 10.0f;
     float carport_inside_width = 11.25f;
     float carport_inside_depth = 25.25f;
