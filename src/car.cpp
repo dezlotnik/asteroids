@@ -10,8 +10,9 @@ Car::Car() {
   color = {0, 122, 204, 255}; // Blue
 
   lives_ = 3;
-  // 1.0 px/frame * 60 fps = 60 px/s = 6 ft/s = ~4 mph (Realistic parking speed)
-  maximum_speed_ = 1.0;
+  // 2.0 px/frame * 60 fps = 120 px/s = 12 ft/s = ~8 mph (Responsive parking speed)
+  maximum_speed_ = 2.0;
+  minimum_speed_ = -2.0;
 }
 
 void Car::Update() {
@@ -25,7 +26,7 @@ void Car::Update() {
       // Instantaneous Braking
       speed = 0.0;
     }
-    speed = std::min(maximum_speed_, std::max(-maximum_speed_, speed));
+    speed = std::min(maximum_speed_, std::max(minimum_speed_, speed));
 
     // Steering (Persists at last value)
     if (steering_state == SteeringState::kLeft) {
