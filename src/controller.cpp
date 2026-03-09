@@ -1,9 +1,9 @@
 #include "controller.h"
 #include <iostream>
 #include "SDL.h"
-#include "spaceship.h"
+#include "car.h"
 
-void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
+void Controller::HandleInput(bool &running, Car &car) const {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
     if (e.type == SDL_QUIT) {
@@ -11,46 +11,41 @@ void Controller::HandleInput(bool &running, SpaceShip &spaceship) const {
     } else if (e.type == SDL_KEYDOWN) {
       switch (e.key.keysym.sym) {
         case SDLK_UP:
-          spaceship.thruster_state = SpaceShip::ThrusterState::kAccelerate;
+          car.throttle_state = Car::ThrottleState::kForward;
           break;
-
+        case SDLK_DOWN:
+          car.throttle_state = Car::ThrottleState::kReverse;
+          break;
         case SDLK_LEFT:
-          spaceship.rotate_state = SpaceShip::RotateState::kLeft;
+          car.steering_state = Car::SteeringState::kLeft;
           break;
-
         case SDLK_RIGHT:
-          spaceship.rotate_state = SpaceShip::RotateState::kRight;
+          car.steering_state = Car::SteeringState::kRight;
           break;
-
-        case SDLK_SPACE:
-          spaceship.firing = true;
-          break;
-
         default :
           break;
-          //spaceship.state = SpaceShip::State::kDecelerate;
       }
     } else if (e.type == SDL_KEYUP) {
       switch (e.key.keysym.sym) {
         case SDLK_UP:
-          spaceship.thruster_state = SpaceShip::ThrusterState::kNone;
+          if (car.throttle_state == Car::ThrottleState::kForward)
+            car.throttle_state = Car::ThrottleState::kNone;
           break;
-
+        case SDLK_DOWN:
+          if (car.throttle_state == Car::ThrottleState::kReverse)
+            car.throttle_state = Car::ThrottleState::kNone;
+          break;
         case SDLK_LEFT:
-          spaceship.rotate_state = SpaceShip::RotateState::kNone;
+          if (car.steering_state == Car::SteeringState::kLeft)
+            car.steering_state = Car::SteeringState::kNone;
           break;
-
         case SDLK_RIGHT:
-          spaceship.rotate_state = SpaceShip::RotateState::kNone;
+          if (car.steering_state == Car::SteeringState::kRight)
+            car.steering_state = Car::SteeringState::kNone;
           break;
-
-        case SDLK_SPACE:
-          spaceship.firing = false;
+        default:
           break;
-
-        default :
-          break;
+      }
     }
   }
-}
 }

@@ -1,11 +1,12 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "asteroid_constants.h"
+#include "parking_constants.h"
 #include <vector>
 #include <string>
+#include "SDL.h"
 
-using namespace AsteroidConstants;
+using namespace ParkingConstants;
 
 class GameObject {
 public:
@@ -25,7 +26,7 @@ public:
   Pose getPose() const { return pose_; }
   void setVelocity(float velocity, float heading, float angular_velocity);
   Velocity getVelocity() const { return velocity_; }
-  void updatePose();
+  virtual void updatePose();
   virtual float getMaximumSpeed() { return maximum_speed_; }
   virtual float getMinimumSpeed() { return minimum_speed_; }
   std::string getImageName() const { return image_name_; }
@@ -37,6 +38,13 @@ public:
   bool isAlive() const { return alive_; }
   virtual void kill() { alive_ = false; }
 
+  struct Point { float x, y; };
+  std::vector<Point> getCorners() const;
+
+  struct Color { Uint8 r, g, b, a; };
+  Color color = {255, 255, 255, 255};
+  bool use_color = false;
+
 protected:
   float maximum_speed_ = 10.0;
   float minimum_speed_ = 0.0;
@@ -44,8 +52,8 @@ protected:
   Pose pose_;
   Velocity velocity_;
   std::string image_name_;
-  int height_;
-  int width_;
+  float height_;
+  float width_;
   bool alive_ = true;
 };
 

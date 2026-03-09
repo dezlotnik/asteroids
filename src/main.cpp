@@ -1,10 +1,10 @@
 #include <iostream>
-#include "asteroid_constants.h"
+#include "parking_constants.h"
 #include "renderer.h"
 #include "controller.h"
 #include "game.h"
 
-using namespace AsteroidConstants;
+using namespace ParkingConstants;
 
 int main() {
 
@@ -12,8 +12,7 @@ int main() {
   Controller controller;
   Game game(kScreenWidth, kScreenHeight);
   game.Run(controller, renderer, kMsPerFrame);
-  std::cout << "Game has terminated successfully!\n";
-  std::cout << "Score: " << game.GetScore() << "\n";
+  std::cout << "Parking Simulator terminated successfully!\n";
 
   return 0;
 }

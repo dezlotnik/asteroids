@@ -2,27 +2,26 @@
 #define RENDERER_H
 
 #include <vector>
+#include <memory>
 #include "SDL.h"
-#include "spaceship.h"
-#include "asteroid.h"
-#include "laser.h"
-#include "enemy.h"
+#include "car.h"
 
 class Renderer {
  public:
   Renderer(const std::size_t screen_width, const std::size_t screen_height);
   ~Renderer();
 
-  void Render(const SpaceShip &spaceship,
-              const std::vector<std::unique_ptr<Asteroid>> &asteroids,
-              const std::vector<std::unique_ptr<Enemy>> &enemies);
-  void RenderGameObject(const GameObject *game_object,
-                        bool render_bounding_box = false);
-  void UpdateWindowTitle(int score, int level, int lives, int fps);
+  void Render(const Car &car,
+              const std::vector<std::unique_ptr<GameObject>> &obstacles);
+  void RenderGameObject(const GameObject *game_object);
+  void RenderTurningCircles(const Car &car);
+  void DrawCircle(int x, int y, int radius);
+  void UpdateWindowTitle(float steering_angle, int fps);
 
  private:
   SDL_Window *sdl_window;
   SDL_Renderer *sdl_renderer;
+  SDL_Texture *white_texture;
 
   const std::size_t screen_width;
   const std::size_t screen_height;

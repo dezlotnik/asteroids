@@ -1,8 +1,8 @@
 #include <math.h>
 #include "game_object.h"
-#include "asteroid_constants.h"
+#include "parking_constants.h"
 
-using namespace AsteroidConstants;
+using namespace ParkingConstants;
 
 void GameObject::setPose(float x, float y, float yaw) {
   pose_.x = x;
@@ -25,12 +25,31 @@ void GameObject::setVelocity(float velocity, float heading, float angular_veloci
 void GameObject::updatePose() {
   float new_x, new_y, new_yaw;
   new_x = getPose().x +
-          cos((velocity_.heading) * 3.14 / 180.0) * velocity_.velocity;
+          cos((velocity_.heading) * 3.14159 / 180.0) * velocity_.velocity;
   new_y = getPose().y +
-          sin((velocity_.heading) * 3.14 / 180.0) * velocity_.velocity;
+          sin((velocity_.heading) * 3.14159 / 180.0) * velocity_.velocity;
   new_yaw = getPose().yaw + velocity_.angular_velocity;
 
-  new_x = fmod(new_x + kScreenWidth, kScreenWidth);
-  new_y = fmod(new_y + kScreenHeight, kScreenHeight);
   setPose(new_x, new_y, new_yaw);
+}
+
+std::vector<GameObject::Point> GameObject::getCorners() const {
+  std::vector<Point> corners;
+  float rad = pose_.yaw * 3.14159 / 180.0;
+  float c = cos(rad);
+  float s = sin(rad);
+
+  float half_w = width_ / 2.0;
+  float half_h = height_ / 2.0;
+
+  float dx[4] = {-half_w, half_w, half_w, -half_w};
+  float dy[4] = {-half_h, -half_h, half_h, half_h};
+
+  for (int i = 0; i < 4; i++) {
+    corners.push_back({
+        pose_.x + dx[i] * c - dy[i] * s,
+        pose_.y + dx[i] * s + dy[i] * c
+    });
+  }
+  return corners;
 }
